@@ -23,9 +23,16 @@ public enum ErrorCode implements ErrorCodeInterface {
 
     // 404 Not Found
     NOT_FOUND_USER(40401, HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+    ID_NOT_FOUND_SENTENCE(40402, HttpStatus.NOT_FOUND, "해당 문장 ID를 찾을 수 없습니다."),
+
+    // 409 Conflict
+    REFERENCE_ALREADY_EXISTS(40901, HttpStatus.CONFLICT, "참조는 문장당 1개만 존재"),
 
     // 500 Internal Server Error
-    TEST(50001, HttpStatus.INTERNAL_SERVER_ERROR, "테스트 에러");
+    TEST(50001, HttpStatus.INTERNAL_SERVER_ERROR, "테스트 에러"),
+    TTS_GENERATION_FAILED(50002, HttpStatus.INTERNAL_SERVER_ERROR, "TTS 생성 중 오류가 발생했습니다."),
+
+    ;
 
     private final Integer code;
     private final HttpStatus httpStatus;
