@@ -13,23 +13,68 @@ java {
 	}
 }
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
+//configurations {
+//	compileOnly {
+//		extendsFrom annotationProcessor
+//	}
+//}
 
 repositories {
 	mavenCentral()
+	mavenLocal()
+	maven {
+		url = uri("https://maven.pkg.github.com/LS-Pionner/LangBoost-BE-api-response-library")
+		credentials {
+			username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+			password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+		}
+	}
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+
+	// JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// JWT
+	implementation("com.auth0:java-jwt:3.16.0")
+	implementation 'org.projectlombok:lombok:1.18.22'// oauth0
+
+	// 로그 라이브러리 사용을 위해 추가
+	annotationProcessor("org.projectlombok:lombok")
+	compileOnly("org.projectlombok:lombok")
+
+	// mysql
 	runtimeOnly 'com.mysql:mysql-connector-j'
-	annotationProcessor 'org.projectlombok:lombok'
+
+	implementation 'javax.validation:validation-api:2.0.1.Final' // 또는 최신 버전
+	implementation 'org.hibernate.validator:hibernate-validator:6.0.13.Final' // 또는 최신 버전
+
+	// 메일
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// Actuatotor
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	//AWS Parameter Store
+	implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0")
+	implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
+
+	// github에서 api-response 라이브러리 가져옴
+	implementation 'com.practice:api-response-library:1.0.2'
+
+	// AOP
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+	// logstash가 logback을 이해할 수 있도록 인코딩하기 위함
+//    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
