@@ -1,21 +1,23 @@
 package com.example.integration.entity.dto.sentence;
 
+import com.example.integration.entity.LearningStatus;
 import com.example.integration.entity.Sentence;
-
-import java.time.LocalDate;
 
 public record SentenceResponseDto(
         Long id,
-        String sentence,
+        String content,
+        String meaning,
         String description,
-        LocalDate lastViewedDate
+        LearningStatus learningStatus
 ) {
     public SentenceResponseDto(Sentence sentence) {
         this(
                 sentence.getId(),
-                sentence.getSentence(),
+                sentence.getContent(),
+                sentence.getMeaning(),
                 sentence.getDescription(),
-                sentence.getLastViewedDate()
+                sentence.getLearningStatus()
         );
     }
+
 }

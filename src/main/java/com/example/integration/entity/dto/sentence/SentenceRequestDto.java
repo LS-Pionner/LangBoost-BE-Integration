@@ -1,7 +1,8 @@
 package com.example.integration.entity.dto.sentence;
 
 public record SentenceRequestDto(
-        String sentence,
+        String content,
+        String meaning,
         String description
 ) {
 }

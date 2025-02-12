@@ -1,7 +1,7 @@
 package com.example.integration.controller;
 
 import com.example.api.response.ApiResponse;
-import com.example.integration.entity.dto.sentence.PagingResponseDto;
+import com.example.integration.entity.dto.sentence.LearningStatusRequestDto;
 import com.example.integration.entity.dto.sentence.SentenceRequestDto;
 import com.example.integration.entity.dto.sentence.SentenceResponseDto;
 import com.example.integration.service.SentenceService;
@@ -16,36 +16,26 @@ public class SentenceController {
     private final SentenceService sentenceService;
 
     /**
-     * 특정 문장 조회 API
-     * @param sentenceId
-     * @return
-     */
-    @GetMapping("/sentence/{sentenceId}")
-    public ApiResponse<SentenceResponseDto> getSentenceById(@PathVariable Long sentenceId) {
-        SentenceResponseDto sentence = sentenceService.getSentenceById(sentenceId);
-
-        return ApiResponse.ok(sentence);
-    }
-
-    /**
-     * 문장 생성 API
+     * 문장 세트에 새로운 문장 생성 API
+     * @param sentenceSetId
      * @param requestDto
      * @return
      */
-    @PostMapping("/sentence")
-    public ApiResponse<SentenceResponseDto> createSentence(@RequestBody SentenceRequestDto requestDto) {
-        SentenceResponseDto createdSentence = sentenceService.createSentence(requestDto);
+    @PostMapping("/sentence-set/{sentenceSetId}/sentence")
+    public ApiResponse<SentenceResponseDto> createSentence(@PathVariable Long sentenceSetId,
+                                                           @RequestBody SentenceRequestDto requestDto) {
+        SentenceResponseDto createdSentence = sentenceService.createSentence(sentenceSetId, requestDto);
 
         return ApiResponse.created(createdSentence);
     }
 
     /**
-     * 특정 문장 수정 API
+     * 문장 세트에서 특정 문장 수정 API
      * @param sentenceId
      * @param requestDto
      * @return
      */
-    @PutMapping("/sentence/{sentenceId}")
+    @PutMapping("/sentence-set/sentence/{sentenceId}")
     public ApiResponse<SentenceResponseDto> updateSentence(
             @PathVariable Long sentenceId,
             @RequestBody SentenceRequestDto requestDto) {
@@ -55,26 +45,30 @@ public class SentenceController {
     }
 
     /**
-     * 특정 문장 삭제 API
+     * 특정 문장의 학습 상태 수정 API
      * @param sentenceId
+     * @param learningStatusRequestDto
      * @return
      */
-    @DeleteMapping("/sentence/{sentenceId}")
-    public ApiResponse<String> deleteSentence(@PathVariable Long sentenceId) {
-        sentenceService.deleteSentence(sentenceId);
+    @PutMapping("/sentence-set/sentence/{sentenceId}/learning-status")
+    public ApiResponse<SentenceResponseDto> updateSentenceLearningStatus(
+            @PathVariable Long sentenceId,
+            @RequestBody LearningStatusRequestDto learningStatusRequestDto) {
+        SentenceResponseDto updatedSentence = sentenceService.updateLearningStatus(sentenceId, learningStatusRequestDto);
 
-        return ApiResponse.ok("문장 삭제 완료");
+        return ApiResponse.ok(updatedSentence);
     }
 
     /**
-     * 문장 목록 페이징 조회 API
-     * @param page
+     * 문장 세트에서 특정 문장 삭제 API
+     * @param sentenceId
      * @return
      */
-    @GetMapping("/sentences")
-    public ApiResponse<PagingResponseDto<SentenceResponseDto>> getSentences(@RequestParam(defaultValue = "1") int page) {
-        PagingResponseDto<SentenceResponseDto> pagingResponse = sentenceService.getSentencesPage(page);
+    @DeleteMapping("/sentence-set/sentence/{sentenceId}")
+    public ApiResponse<String> deleteSentence(@PathVariable Long sentenceId) {
+        sentenceService.deleteSentence(sentenceId);
 
-        return ApiResponse.ok(pagingResponse);
+        return ApiResponse.ok("문장 세트에서 문장 삭제 완료");
     }
+
 }

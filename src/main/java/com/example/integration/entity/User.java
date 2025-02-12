@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private boolean enabled;
 
     @OneToMany(mappedBy = "user")
-    private List<Sentence> sentenceList = new ArrayList<>();
+    private List<SentenceSet> sentenceSetList = new ArrayList<>();
 
     @Override
     public String getUsername() {

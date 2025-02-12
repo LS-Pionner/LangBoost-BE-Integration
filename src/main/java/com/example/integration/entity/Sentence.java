@@ -1,52 +1,51 @@
 package com.example.integration.entity;
 
+import com.example.integration.config.util.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "sentence")
 @Entity
-public class Sentence {
+public class Sentence extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String sentence;
+    private String content;
+
+    private String meaning;
 
     private String description;
 
-    @Column(nullable = false)
-    private LocalDate lastViewedDate;
+    @Enumerated(EnumType.STRING)
+    private LearningStatus learningStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-//    @OneToMany(mappedBy = "sentence", cascade = CascadeType.ALL)
-//    private List<Word> words;
+    @JoinColumn(name = "sentence_set_id")
+    private SentenceSet sentenceSet;
 
     @Builder
-    public Sentence(String sentence, String description, LocalDate lastViewedDate, User user) {
-        this.sentence = sentence;
+    public Sentence(String content, String meaning, String description, LearningStatus learningStatus, SentenceSet sentenceSet) {
+        this.content = content;
+        this.meaning = meaning;
         this.description = description;
-        this.lastViewedDate = lastViewedDate;
-        this.user = user;
+        this.learningStatus = learningStatus;
+        this.sentenceSet = sentenceSet;
 
-        user.getSentenceList().add(this);
+        sentenceSet.getSentenceList().add(this);
     }
 
-    public void updateSentence(String newSentence, String newDescription) {
-        this.sentence = newSentence;
-        this.description = newDescription;
+    public void updateSentence(String content, String meaning, String description) {
+        this.content = content;
+        this.meaning = meaning;
+        this.description = description;
     }
 
-    public void updateLastViewedDate(LocalDate newLastViewedDate) {
-        this.lastViewedDate = newLastViewedDate;
+    public void updateLearningStatus(LearningStatus learningStatus) {
+        this.learningStatus = learningStatus;
     }
 
 }

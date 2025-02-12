@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SentenceRepository extends JpaRepository<Sentence, Long> {
-    Page<Sentence> findByUserId(Long userId, Pageable pageable);
+    Page<Sentence> findBySentenceSetId(Long sentenceSetId, Pageable pageable);
 }
