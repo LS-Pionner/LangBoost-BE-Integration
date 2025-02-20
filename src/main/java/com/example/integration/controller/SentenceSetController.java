@@ -1,10 +1,7 @@
 package com.example.integration.controller;
 
 import com.example.api.response.ApiResponse;
-import com.example.integration.entity.dto.sentenceSet.SentenceSetAndPagingResponseDto;
-import com.example.integration.entity.dto.sentenceSet.SentenceSetRequestDto;
-import com.example.integration.entity.dto.sentenceSet.SentenceSetResponseDto;
-import com.example.integration.entity.dto.sentenceSet.UserSentenceSetResponseDto;
+import com.example.integration.entity.dto.sentenceSet.*;
 import com.example.integration.service.SentenceSetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +12,50 @@ import org.springframework.web.bind.annotation.*;
 public class SentenceSetController {
 
     private final SentenceSetService sentenceSetService;
+
+    /**
+     * 문장 세트 목록 조회 API
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @GetMapping("/sentence-set")
+    public ApiResponse<ListSentenceSetResponseDto> getSentenceSetList(@RequestParam(defaultValue = "0") int offset,
+                                                                      @RequestParam(defaultValue = "10") int limit) {
+        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.getSentenceSetList(offset, limit);
+
+        return ApiResponse.ok(listSentenceSetResponseDto);
+    }
+
+    /**
+     * 키워드로 문장 세트 목록 검색 API
+     * @param keyword
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @GetMapping("/sentence-set/search")
+    public ApiResponse<ListSentenceSetResponseDto> searchSentenceSetList(@RequestParam(name = "keyword", defaultValue = "") String keyword,
+                                                                         @RequestParam(defaultValue = "0") int offset,
+                                                                         @RequestParam(defaultValue = "10") int limit) {
+        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.searchSentenceSetList(keyword, offset, limit);
+
+        return ApiResponse.ok(listSentenceSetResponseDto);
+    }
+
+    /**
+     * 사용자의 문장 세트 조회 API
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @GetMapping("my/sentence-set")
+    public ApiResponse<UserSentenceSetResponseDto> getSentenceSetById(@RequestParam(defaultValue = "0") int offset,
+                                                                      @RequestParam(defaultValue = "10") int limit) {
+        UserSentenceSetResponseDto userSentenceSetResponseDto = sentenceSetService.getSentenceSetByUser(offset, limit);
+
+        return ApiResponse.ok(userSentenceSetResponseDto);
+    }
 
     /**
      * 특정 문장 세트와 포함된 문장 목록 조회 API
@@ -28,17 +69,6 @@ public class SentenceSetController {
         SentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getSentenceSetWithSentences(sentenceSetId, page);
 
         return ApiResponse.ok(sentenceSetWithSentences);
-    }
-
-    /**
-     * 사용자의 문장 세트 조회 API
-     * @return
-     */
-    @GetMapping("my/sentence-set")
-    public ApiResponse<UserSentenceSetResponseDto> getSentenceSetById() {
-        UserSentenceSetResponseDto userSentenceSetResponseDto = sentenceSetService.getSentenceSetByUser();
-
-        return ApiResponse.ok(userSentenceSetResponseDto);
     }
 
     /**

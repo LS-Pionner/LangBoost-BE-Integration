@@ -9,10 +9,7 @@ import com.example.integration.entity.SentenceSet;
 import com.example.integration.entity.User;
 import com.example.integration.entity.dto.sentence.PagingResponseDto;
 import com.example.integration.entity.dto.sentence.SentenceResponseDto;
-import com.example.integration.entity.dto.sentenceSet.SentenceSetAndPagingResponseDto;
-import com.example.integration.entity.dto.sentenceSet.SentenceSetRequestDto;
-import com.example.integration.entity.dto.sentenceSet.SentenceSetResponseDto;
-import com.example.integration.entity.dto.sentenceSet.UserSentenceSetResponseDto;
+import com.example.integration.entity.dto.sentenceSet.*;
 import com.example.integration.repository.SentenceRepository;
 import com.example.integration.repository.SentenceSetRepository;
 import com.example.integration.repository.UserRepository;
@@ -58,7 +55,51 @@ public class SentenceSetService {
     }
 
     /**
-     * 특정 문장 세트와 포함된 문장 목록 조회 API
+     * 허용 공개인 문장 세트 목록 조회
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public ListSentenceSetResponseDto getSentenceSetList(int offset, int limit) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        List<SentenceSet> sentenceSetList = sentenceSetRepository.findAllWhichPublic(pageable);
+
+        return new ListSentenceSetResponseDto(sentenceSetList);
+    }
+
+    /**
+     * 키워드(title)를 바탕으로 문장 세트 목록 조회
+     * @param keyword
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public ListSentenceSetResponseDto searchSentenceSetList(String keyword, int offset, int limit) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        List<SentenceSet> sentenceSetList = sentenceSetRepository.findAllWithKeyword(keyword, pageable);
+
+        return new ListSentenceSetResponseDto(sentenceSetList);
+    }
+
+    /**
+     * 사용자의 문장 세트 조회
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public UserSentenceSetResponseDto getSentenceSetByUser(int offset, int limit) {
+        User user = currentUser();
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        List<SentenceSet> sentenceSetList = sentenceSetRepository.findAllByUserId(user.getId(), pageable);
+
+        return new UserSentenceSetResponseDto(user, sentenceSetList);
+    }
+
+    /**
+     * 특정 문장 세트와 포함된 문장 목록 조회
      * @param sentenceSetId
      * @param page
      * @return
@@ -89,18 +130,6 @@ public class SentenceSetService {
         PagingResponseDto<SentenceResponseDto> pagingResponseDto = PagingResponseDto.of(sentenceResponseDtoPage);
 
         return new SentenceSetAndPagingResponseDto(sentenceSetResponseDto, pagingResponseDto);
-    }
-
-    /**
-     * 사용자의 문장 세트 조회
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public UserSentenceSetResponseDto getSentenceSetByUser() {
-        User user = currentUser();
-        List<SentenceSet> sentenceSetList = sentenceSetRepository.findAllByUserId(user.getId());
-
-        return new UserSentenceSetResponseDto(user, sentenceSetList);
     }
 
     /**
