@@ -4,11 +4,10 @@ import com.example.api.response.ApiResponse;
 import com.example.integration.entity.dto.sentenceSet.SentenceSetAndPagingResponseDto;
 import com.example.integration.entity.dto.sentenceSet.SentenceSetRequestDto;
 import com.example.integration.entity.dto.sentenceSet.SentenceSetResponseDto;
+import com.example.integration.entity.dto.sentenceSet.UserSentenceSetResponseDto;
 import com.example.integration.service.SentenceSetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -36,10 +35,10 @@ public class SentenceSetController {
      * @return
      */
     @GetMapping("my/sentence-set")
-    public ApiResponse<List<SentenceSetResponseDto>> getSentenceSetById() {
-        List<SentenceSetResponseDto> sentenceSetList = sentenceSetService.getSentenceSetByUser();
+    public ApiResponse<UserSentenceSetResponseDto> getSentenceSetById() {
+        UserSentenceSetResponseDto userSentenceSetResponseDto = sentenceSetService.getSentenceSetByUser();
 
-        return ApiResponse.ok(sentenceSetList);
+        return ApiResponse.ok(userSentenceSetResponseDto);
     }
 
     /**

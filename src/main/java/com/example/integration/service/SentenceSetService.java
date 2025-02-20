@@ -12,6 +12,7 @@ import com.example.integration.entity.dto.sentence.SentenceResponseDto;
 import com.example.integration.entity.dto.sentenceSet.SentenceSetAndPagingResponseDto;
 import com.example.integration.entity.dto.sentenceSet.SentenceSetRequestDto;
 import com.example.integration.entity.dto.sentenceSet.SentenceSetResponseDto;
+import com.example.integration.entity.dto.sentenceSet.UserSentenceSetResponseDto;
 import com.example.integration.repository.SentenceRepository;
 import com.example.integration.repository.SentenceSetRepository;
 import com.example.integration.repository.UserRepository;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -96,13 +96,11 @@ public class SentenceSetService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<SentenceSetResponseDto> getSentenceSetByUser() {
+    public UserSentenceSetResponseDto getSentenceSetByUser() {
         User user = currentUser();
         List<SentenceSet> sentenceSetList = sentenceSetRepository.findAllByUserId(user.getId());
 
-        return sentenceSetList.stream()
-                .map(SentenceSetResponseDto::new)
-                .collect(Collectors.toList());
+        return new UserSentenceSetResponseDto(user, sentenceSetList);
     }
 
     /**
