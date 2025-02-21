@@ -18,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -71,7 +72,7 @@ public class SecurityConfig {
                                 .authenticationEntryPoint(authenticationEntryPoint)
                                 .accessDeniedHandler(customAccessDeniedHandler)
                 )
-                .addFilterAt(checkFilter, BasicAuthenticationFilter.class); // JWT 검증 필터 추가
+                .addFilterAfter(checkFilter, ExceptionTranslationFilter.class); // JWT 검증 필터 추가
         return http.build();
     }
 
