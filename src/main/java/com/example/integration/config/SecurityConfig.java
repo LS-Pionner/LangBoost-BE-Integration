@@ -63,8 +63,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/email-check").permitAll() // 이 경로들은 인증 없이 접근 가능
-                                .requestMatchers("/api/v1/auth/logout", "/api/v1/auth/reissue").authenticated() // 로그아웃 & 토큰 재발급은 권한에 상관없이 접근 가능
+                                .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/email-check", "/api/v1/auth/reissue").permitAll() // 이 경로들은 인증 없이 접근 가능
+                                .requestMatchers("/api/v1/auth/logout").authenticated() // 로그아웃 & 토큰 재발급은 권한에 상관없이 접근 가능
                                 .requestMatchers("/api/v1/auth/**").hasAnyRole(RoleType.USER.name(), RoleType.ADMIN.name()) // 나머지 모든 요청은 USER 권한 필요
                                 .anyRequest().permitAll()
                 ).exceptionHandling(exception ->
