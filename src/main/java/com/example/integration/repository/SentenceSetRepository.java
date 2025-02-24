@@ -19,8 +19,9 @@ public interface SentenceSetRepository extends JpaRepository<SentenceSet, Long> 
     @Query("select ss " +
             "from SentenceSet ss " +
             "where ss.title like %:keyword% " +
+            "and ss.isPublic = true " +
             "order by ss.createdDate desc, ss.title asc")
-    List<SentenceSet> findAllWithKeyword(String keyword, Pageable pageable);
+    List<SentenceSet> findAllWithKeywordWhichPublic(String keyword, Pageable pageable);
 
     @Query("select ss " +
             "from SentenceSet ss " +

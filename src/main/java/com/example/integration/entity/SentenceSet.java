@@ -50,10 +50,9 @@ public class SentenceSet extends BaseEntity {
         user.getSentenceSetList().add(this);
     }
 
-    public void updateSentenceSet(String title, String description, boolean isPublic) {
+    public void updateSentenceSet(String title, String description) {
         this.title = title;
         this.description = description;
-        this.isPublic = isPublic;
     }
 
     public void updateLastViewedDate(LocalDate lastViewedDate) {

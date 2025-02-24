@@ -14,42 +14,58 @@ public class SentenceSetController {
     private final SentenceSetService sentenceSetService;
 
     /**
-     * 문장 세트 목록 조회 API
+     * 공용 문장 세트 목록 조회 API
      * @param offset
      * @param limit
      * @return
      */
-    @GetMapping("/sentence-set")
-    public ApiResponse<ListSentenceSetResponseDto> getSentenceSetList(@RequestParam(defaultValue = "0") int offset,
+    @GetMapping("/public/sentence-set")
+    public ApiResponse<ListSentenceSetResponseDto> getPublicSentenceSetList(@RequestParam(defaultValue = "0") int offset,
                                                                       @RequestParam(defaultValue = "10") int limit) {
-        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.getSentenceSetList(offset, limit);
+        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.getPublicSentenceSetList(offset, limit);
 
         return ApiResponse.ok(listSentenceSetResponseDto);
     }
 
     /**
      * 키워드로 문장 세트 목록 검색 API
+     * 현재는 공용 모든 문장 세트에 대해서 검색
+     * (추후 공용 여부에 따라 쿼리 수정)
      * @param keyword
      * @param offset
      * @param limit
      * @return
      */
-    @GetMapping("/sentence-set/search")
-    public ApiResponse<ListSentenceSetResponseDto> searchSentenceSetList(@RequestParam(name = "keyword", defaultValue = "") String keyword,
+    @GetMapping("/public/sentence-set/search")
+    public ApiResponse<ListSentenceSetResponseDto> searchPublicSentenceSetList(@RequestParam(name = "keyword", defaultValue = "") String keyword,
                                                                          @RequestParam(defaultValue = "0") int offset,
                                                                          @RequestParam(defaultValue = "10") int limit) {
-        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.searchSentenceSetList(keyword, offset, limit);
+        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.searchPublicSentenceSetList(keyword, offset, limit);
 
         return ApiResponse.ok(listSentenceSetResponseDto);
     }
 
     /**
-     * 사용자의 문장 세트 조회 API
+     * 특정 공용 문장 세트와 포함된 문장 목록 조회 API
+     * @param sentenceSetId
+     * @param page
+     * @return
+     */
+    @GetMapping("/public/sentence-set/{sentenceSetId}")
+    public ApiResponse<SentenceSetAndPagingResponseDto> getPublicSentenceSetWithSentences(@PathVariable Long sentenceSetId,
+                                                                                    @RequestParam(defaultValue = "0") int page) {
+        SentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getPublicSentenceSetWithSentences(sentenceSetId, page);
+
+        return ApiResponse.ok(sentenceSetWithSentences);
+    }
+
+    /**
+     * 개인 문장 세트 목록 조회 API
      * @param offset
      * @param limit
      * @return
      */
-    @GetMapping("my/sentence-set")
+    @GetMapping("/sentence-set")
     public ApiResponse<UserSentenceSetResponseDto> getSentenceSetById(@RequestParam(defaultValue = "0") int offset,
                                                                       @RequestParam(defaultValue = "10") int limit) {
         UserSentenceSetResponseDto userSentenceSetResponseDto = sentenceSetService.getSentenceSetByUser(offset, limit);
@@ -58,7 +74,7 @@ public class SentenceSetController {
     }
 
     /**
-     * 특정 문장 세트와 포함된 문장 목록 조회 API
+     * 특정 개인 문장 세트와 포함된 문장 목록 조회 API
      * @param sentenceSetId
      * @param page
      * @return

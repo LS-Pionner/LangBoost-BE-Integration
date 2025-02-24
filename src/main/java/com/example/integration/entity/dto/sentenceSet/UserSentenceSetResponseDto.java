@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public record UserSentenceSetResponseDto(
         int sentenceSetCount,
-        List<SentenceSetResponseDto> sentenceSetResponseDtoList
+        List<SentenceSetResponseDto> sentenceSetList
 ) {
     public UserSentenceSetResponseDto(User user, List<SentenceSet> sentenceSetList) {
         this(

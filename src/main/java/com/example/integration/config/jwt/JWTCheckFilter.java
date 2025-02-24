@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class JWTCheckFilter extends BasicAuthenticationFilter {
@@ -31,9 +32,13 @@ public class JWTCheckFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
 
+        String uri = request.getRequestURI();
         // 아래 경로에 대해서는 필터 X
-        if (request.getRequestURI().equals("/api/v1/auth/register") || request.getRequestURI().equals("/api/v1/auth/login")
-                || request.getRequestURI().equals("/api/v1/auth/email-check") || request.getRequestURI().equals("/api/v1/auth/reissue")) {
+        if (uri.equals("/api/v1/auth/register")
+                || uri.equals("/api/v1/auth/login")
+                || uri.equals("/api/v1/auth/email-check")
+                || uri.equals("/api/v1/auth/reissue")
+                || uri.startsWith("/api/v1/public")) {
             chain.doFilter(request, response);
             return;
         }

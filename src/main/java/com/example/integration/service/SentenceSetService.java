@@ -55,13 +55,13 @@ public class SentenceSetService {
     }
 
     /**
-     * 허용 공개인 문장 세트 목록 조회
+     * 공용 문장 세트 목록 조회
      * @param offset
      * @param limit
      * @return
      */
     @Transactional(readOnly = true)
-    public ListSentenceSetResponseDto getSentenceSetList(int offset, int limit) {
+    public ListSentenceSetResponseDto getPublicSentenceSetList(int offset, int limit) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         List<SentenceSet> sentenceSetList = sentenceSetRepository.findAllWhichPublic(pageable);
 
@@ -69,22 +69,50 @@ public class SentenceSetService {
     }
 
     /**
-     * 키워드(title)를 바탕으로 문장 세트 목록 조회
+     * 키워드(title)를 바탕으로 공용 문장 세트 목록 조회
      * @param keyword
      * @param offset
      * @param limit
      * @return
      */
     @Transactional(readOnly = true)
-    public ListSentenceSetResponseDto searchSentenceSetList(String keyword, int offset, int limit) {
+    public ListSentenceSetResponseDto searchPublicSentenceSetList(String keyword, int offset, int limit) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
-        List<SentenceSet> sentenceSetList = sentenceSetRepository.findAllWithKeyword(keyword, pageable);
+        List<SentenceSet> sentenceSetList = sentenceSetRepository.findAllWithKeywordWhichPublic(keyword, pageable);
 
         return new ListSentenceSetResponseDto(sentenceSetList);
     }
 
     /**
-     * 사용자의 문장 세트 조회
+     * 특정 공용 문장 세트와 포함된 문장 목록 조회
+     * @param sentenceSetId
+     * @param page
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public SentenceSetAndPagingResponseDto getPublicSentenceSetWithSentences(Long sentenceSetId, int page) {
+        SentenceSet sentenceSet = findSentenceSetWithId(sentenceSetId);
+
+        // 개인 문장 세트 조회일 때
+        if (!sentenceSet.isPublic()) {
+            throw new CustomException(ErrorCode.PRIVATE_SENTENCE_SET);
+        }
+
+        // 10개 페이징
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Sentence> sentencesPage = sentenceRepository.findBySentenceSetId(sentenceSet.getId(), pageable);
+
+        SentenceSetResponseDto sentenceSetResponseDto = new SentenceSetResponseDto(sentenceSet);
+
+        Page<SentenceResponseDto> sentenceResponseDtoPage = sentencesPage.map(SentenceResponseDto::new);
+
+        PagingResponseDto<SentenceResponseDto> pagingResponseDto = PagingResponseDto.of(sentenceResponseDtoPage);
+
+        return new SentenceSetAndPagingResponseDto(sentenceSetResponseDto, pagingResponseDto);
+    }
+
+    /**
+     * 개인 문장 세트 조회
      * @param offset
      * @param limit
      * @return
@@ -99,25 +127,26 @@ public class SentenceSetService {
     }
 
     /**
-     * 특정 문장 세트와 포함된 문장 목록 조회
+     * 특정 개인 문장 세트와 포함된 문장 목록 조회
      * @param sentenceSetId
      * @param page
      * @return
      */
     @Transactional(readOnly = true)
     public SentenceSetAndPagingResponseDto getSentenceSetWithSentences(Long sentenceSetId, int page) {
-        User user = currentUser();
         SentenceSet sentenceSet = findSentenceSetWithId(sentenceSetId);
 
-        // 공용 조회가 아닐 때
+        // 개인 문장 세트 조회일 때
         if (!sentenceSet.isPublic()) {
-            if (user.getId() != sentenceSet.getUser().getId()) {
+            User user = currentUser();
+
+            if (user.getId() == sentenceSet.getUser().getId()) {
+                // 문장 조회 후 최근 조회 이벤트 발생
+                eventPublisher.publishEvent(new SentenceSetViewedEvent(sentenceSetId));
+            } else {
                 throw new CustomException(ErrorCode.PRIVATE_SENTENCE_SET);
             }
         }
-
-        // 문장 조회 후 최근 조회 이벤트 발생
-        eventPublisher.publishEvent(new SentenceSetViewedEvent(sentenceSetId));
 
         // 10개 페이징
         Pageable pageable = PageRequest.of(page, 10);
@@ -144,7 +173,7 @@ public class SentenceSetService {
         SentenceSet sentenceSet = SentenceSet.builder()
                 .title(sentenceSetRequestDto.title())
                 .description(sentenceSetRequestDto.description())
-                .isPublic(sentenceSetRequestDto.isPublic())
+                .isPublic(false)
                 .user(user)
                 .build();
 
@@ -163,7 +192,7 @@ public class SentenceSetService {
     public SentenceSetResponseDto updateSentenceSet(Long sentenceSetId, SentenceSetRequestDto sentenceSetRequestDto) {
         SentenceSet sentenceSet = findSentenceSetWithId(sentenceSetId);
 
-        sentenceSet.updateSentenceSet(sentenceSetRequestDto.title(), sentenceSetRequestDto.description(), sentenceSetRequestDto.isPublic());
+        sentenceSet.updateSentenceSet(sentenceSetRequestDto.title(), sentenceSetRequestDto.description());
 
         SentenceSet updatedSentenceSet = sentenceSetRepository.save(sentenceSet);
 
