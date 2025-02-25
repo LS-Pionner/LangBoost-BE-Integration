@@ -7,7 +7,6 @@ import java.time.LocalDate;
 public record SentenceSetResponseDto (
         Long id,
         String title,
-        String description,
         int sentenceCount,
         boolean isPublic,
         LocalDate lastViewedAt
@@ -16,7 +15,6 @@ public record SentenceSetResponseDto (
         this(
                 sentenceSet.getId(),
                 sentenceSet.getTitle(),
-                sentenceSet.getDescription(),
                 sentenceSet.getSentenceList().size(),
                 sentenceSet.isPublic(),
                 sentenceSet.getLastViewedDate()

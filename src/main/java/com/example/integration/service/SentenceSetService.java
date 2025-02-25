@@ -172,7 +172,6 @@ public class SentenceSetService {
 
         SentenceSet sentenceSet = SentenceSet.builder()
                 .title(sentenceSetRequestDto.title())
-                .description(sentenceSetRequestDto.description())
                 .isPublic(false)
                 .user(user)
                 .build();
@@ -192,7 +191,7 @@ public class SentenceSetService {
     public SentenceSetResponseDto updateSentenceSet(Long sentenceSetId, SentenceSetRequestDto sentenceSetRequestDto) {
         SentenceSet sentenceSet = findSentenceSetWithId(sentenceSetId);
 
-        sentenceSet.updateSentenceSet(sentenceSetRequestDto.title(), sentenceSetRequestDto.description());
+        sentenceSet.updateSentenceSet(sentenceSetRequestDto.title());
 
         SentenceSet updatedSentenceSet = sentenceSetRepository.save(sentenceSet);
 
