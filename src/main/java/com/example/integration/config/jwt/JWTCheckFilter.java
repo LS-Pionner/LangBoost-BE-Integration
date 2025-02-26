@@ -56,22 +56,26 @@ public class JWTCheckFilter extends BasicAuthenticationFilter {
         // 토큰 검증
         VerifyResult result = jwtUtil.verify(token);
 
-        if (result.isSuccess()) {
-            // 유저 검증
-            User user = (User) userService.loadUserByUsername(result.username());
-            UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
-                    user, null, user.getAuthorities()
-            );
+        switch (result.status()) {
+            case SUCCESS:
+                User user = (User) userService.loadUserByUsername(result.username());
+                UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
+                        user, null, user.getAuthorities()
+                );
 
-            // SecurityContext에 인증 객체 저장
-            SecurityContextHolder.getContext().setAuthentication(userToken);
-            log.info("Token successfully verified for user: {}. Request URI: {}", user.getUsername(), request.getRequestURI());
-            chain.doFilter(request, response);
-        } else {
-            // 검증 실패 시 로그 기록
-            log.error("Token verification failed for token: {}.", token);
-
-            throw new JWTAuthenticationException("Invalid or expired token.");
+                // SecurityContext에 인증 객체 저장
+                SecurityContextHolder.getContext().setAuthentication(userToken);
+                log.info("Token successfully verified for user: {}. Request URI: {}", user.getUsername(), request.getRequestURI());
+                chain.doFilter(request, response);
+                break;
+            case EXPIRED:
+                // 토큰 만료 시 로그 기록
+                log.error("Expired Token: {}.", token);
+                throw new JwtTokenExpiredException("Expired Token");
+            case INVALID:
+            default:
+                log.error("Invalid Token: {}.", token);
+                throw new JWTAuthenticationException("Invalid Token.");
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.integration.config.exception;
 
 import com.example.api.response.ApiResponse;
+import com.example.integration.config.jwt.JwtTokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,9 +32,15 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         log.error("Request Uri : {}", request.getRequestURI());
 
         // body 설정
-        ApiResponse<Object> apiResponse = ApiResponse.fail(ErrorCode.INVALID_TOKEN);
-        String responseBody = objectMapper.writeValueAsString(apiResponse);
+        ApiResponse<Object> apiResponse;
 
+        if (authException instanceof JwtTokenExpiredException) {
+            apiResponse = ApiResponse.fail(ErrorCode.EXPIRED_TOKEN);
+        } else {
+            apiResponse = ApiResponse.fail(ErrorCode.INVALID_TOKEN);
+        }
+
+        String responseBody = objectMapper.writeValueAsString(apiResponse);
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());

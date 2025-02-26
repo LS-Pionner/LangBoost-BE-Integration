@@ -3,6 +3,7 @@ package com.example.integration.service;
 import com.example.api.response.CustomException;
 import com.example.integration.config.exception.ErrorCode;
 import com.example.integration.config.jwt.JWTUtil;
+import com.example.integration.config.jwt.TokenStatus;
 import com.example.integration.entity.RoleType;
 import com.example.integration.entity.User;
 import com.example.integration.entity.dto.user.*;
@@ -124,7 +125,7 @@ public class UserService implements UserDetailsService {
         VerifyResult verifyResult = jwtUtil.verify(refreshToken);
 
         // 전달받은 refresh 토큰이 유효하지 않음
-        if (!verifyResult.isSuccess()) {
+        if (!verifyResult.status().equals(TokenStatus.SUCCESS)) {
             throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 

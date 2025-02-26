@@ -4,8 +4,10 @@ import com.example.api.response.ApiResponse;
 import com.example.integration.entity.dto.sentenceSet.*;
 import com.example.integration.service.SentenceSetService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
@@ -23,7 +25,7 @@ public class SentenceSetController {
     public ApiResponse<ListSentenceSetResponseDto> getPublicSentenceSetList(@RequestParam(defaultValue = "0") int offset,
                                                                       @RequestParam(defaultValue = "10") int limit) {
         ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.getPublicSentenceSetList(offset, limit);
-
+        log.info("offset: {}", offset);
         return ApiResponse.ok(listSentenceSetResponseDto);
     }
 
