@@ -54,9 +54,9 @@ public class SentenceSetController {
      * @return
      */
     @GetMapping("/public/sentence-set/{sentenceSetId}")
-    public ApiResponse<SentenceSetAndPagingResponseDto> getPublicSentenceSetWithSentences(@PathVariable Long sentenceSetId,
+    public ApiResponse<PublicSentenceSetAndPagingResponseDto> getPublicSentenceSetWithSentences(@PathVariable Long sentenceSetId,
                                                                                     @RequestParam(defaultValue = "0") int page) {
-        SentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getPublicSentenceSetWithSentences(sentenceSetId, page);
+        PublicSentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getPublicSentenceSetWithSentences(sentenceSetId, page);
 
         return ApiResponse.ok(sentenceSetWithSentences);
     }

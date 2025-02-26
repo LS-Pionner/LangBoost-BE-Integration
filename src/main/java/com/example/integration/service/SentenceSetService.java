@@ -8,6 +8,7 @@ import com.example.integration.entity.Sentence;
 import com.example.integration.entity.SentenceSet;
 import com.example.integration.entity.User;
 import com.example.integration.entity.dto.sentence.PagingResponseDto;
+import com.example.integration.entity.dto.sentence.PublicSentenceResponseDto;
 import com.example.integration.entity.dto.sentence.SentenceResponseDto;
 import com.example.integration.entity.dto.sentenceSet.*;
 import com.example.integration.repository.SentenceRepository;
@@ -90,7 +91,7 @@ public class SentenceSetService {
      * @return
      */
     @Transactional(readOnly = true)
-    public SentenceSetAndPagingResponseDto getPublicSentenceSetWithSentences(Long sentenceSetId, int page) {
+    public PublicSentenceSetAndPagingResponseDto getPublicSentenceSetWithSentences(Long sentenceSetId, int page) {
         SentenceSet sentenceSet = findSentenceSetWithId(sentenceSetId);
 
         // 개인 문장 세트 조회일 때
@@ -102,13 +103,13 @@ public class SentenceSetService {
         Pageable pageable = PageRequest.of(page, 10);
         Page<Sentence> sentencesPage = sentenceRepository.findBySentenceSetId(sentenceSet.getId(), pageable);
 
-        SentenceSetResponseDto sentenceSetResponseDto = new SentenceSetResponseDto(sentenceSet);
+        PublicSentenceSetResponseDto sentenceSetResponseDto = new PublicSentenceSetResponseDto(sentenceSet);
 
-        Page<SentenceResponseDto> sentenceResponseDtoPage = sentencesPage.map(SentenceResponseDto::new);
+        Page<PublicSentenceResponseDto> sentenceResponseDtoPage = sentencesPage.map(PublicSentenceResponseDto::new);
 
-        PagingResponseDto<SentenceResponseDto> pagingResponseDto = PagingResponseDto.of(sentenceResponseDtoPage);
+        PagingResponseDto<PublicSentenceResponseDto> pagingResponseDto = PagingResponseDto.of(sentenceResponseDtoPage);
 
-        return new SentenceSetAndPagingResponseDto(sentenceSetResponseDto, pagingResponseDto);
+        return new PublicSentenceSetAndPagingResponseDto(sentenceSetResponseDto, pagingResponseDto);
     }
 
     /**

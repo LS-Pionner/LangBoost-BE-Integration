@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class ListSentenceSetResponseDto {
-    private List<SentenceSetResponseDto> sentenceSetList;
+    private List<PublicSentenceSetResponseDto> sentenceSetList;
 
     public ListSentenceSetResponseDto(List<SentenceSet> sentenceSetList) {
         this.sentenceSetList = sentenceSetList.stream()
-                .map(SentenceSetResponseDto::new) // 메서드 참조 사용
+                .map(PublicSentenceSetResponseDto::new) // 메서드 참조 사용
                 .collect(Collectors.toList());
         }
 }
