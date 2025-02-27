@@ -1,4 +1,6 @@
 package com.example.integration.entity.dto.user;
 
-public record VerifyResult(boolean isSuccess, String username) {
+import com.example.integration.config.jwt.TokenStatus;
+
+public record VerifyResult(TokenStatus status, String username) {
 }

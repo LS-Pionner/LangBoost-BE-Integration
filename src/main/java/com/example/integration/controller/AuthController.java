@@ -73,7 +73,7 @@ public class AuthController {
                 .maxAge(60 * 60 * 24 * 7)   // 7일
                 .path("/")
                 .sameSite("Lax")
-                .httpOnly(true)
+                .httpOnly(false)    // 브라우저에서 토큰 접근을 위함
                 .build();
 
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + userInfoAndTokenDto.tokenDto().accessToken());
@@ -99,7 +99,7 @@ public class AuthController {
                 .maxAge(60 * 60 * 24 * 7)   // 7일
                 .path("/")
                 .sameSite("Lax")
-                .httpOnly(true)
+                .httpOnly(false)    // 브라우저에서 토큰 접근을 위함
                 .build();
 
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.accessToken());

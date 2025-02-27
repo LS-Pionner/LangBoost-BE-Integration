@@ -1,15 +1,13 @@
 package com.example.integration.controller;
 
 import com.example.api.response.ApiResponse;
-import com.example.integration.entity.dto.sentenceSet.SentenceSetAndPagingResponseDto;
-import com.example.integration.entity.dto.sentenceSet.SentenceSetRequestDto;
-import com.example.integration.entity.dto.sentenceSet.SentenceSetResponseDto;
+import com.example.integration.entity.dto.sentenceSet.*;
 import com.example.integration.service.SentenceSetService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
@@ -18,7 +16,67 @@ public class SentenceSetController {
     private final SentenceSetService sentenceSetService;
 
     /**
-     * 특정 문장 세트와 포함된 문장 목록 조회 API
+     * 공용 문장 세트 목록 조회 API
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @GetMapping("/public/sentence-set")
+    public ApiResponse<ListSentenceSetResponseDto> getPublicSentenceSetList(@RequestParam(defaultValue = "0") int offset,
+                                                                      @RequestParam(defaultValue = "10") int limit) {
+        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.getPublicSentenceSetList(offset, limit);
+        log.info("offset: {}", offset);
+        return ApiResponse.ok(listSentenceSetResponseDto);
+    }
+
+    /**
+     * 키워드로 문장 세트 목록 검색 API
+     * 현재는 공용 모든 문장 세트에 대해서 검색
+     * (추후 공용 여부에 따라 쿼리 수정)
+     * @param keyword
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @GetMapping("/public/sentence-set/search")
+    public ApiResponse<ListSentenceSetResponseDto> searchPublicSentenceSetList(@RequestParam(name = "keyword", defaultValue = "") String keyword,
+                                                                         @RequestParam(defaultValue = "0") int offset,
+                                                                         @RequestParam(defaultValue = "10") int limit) {
+        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.searchPublicSentenceSetList(keyword, offset, limit);
+
+        return ApiResponse.ok(listSentenceSetResponseDto);
+    }
+
+    /**
+     * 특정 공용 문장 세트와 포함된 문장 목록 조회 API
+     * @param sentenceSetId
+     * @param page
+     * @return
+     */
+    @GetMapping("/public/sentence-set/{sentenceSetId}")
+    public ApiResponse<PublicSentenceSetAndPagingResponseDto> getPublicSentenceSetWithSentences(@PathVariable Long sentenceSetId,
+                                                                                    @RequestParam(defaultValue = "0") int page) {
+        PublicSentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getPublicSentenceSetWithSentences(sentenceSetId, page);
+
+        return ApiResponse.ok(sentenceSetWithSentences);
+    }
+
+    /**
+     * 개인 문장 세트 목록 조회 API
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @GetMapping("/sentence-set")
+    public ApiResponse<UserSentenceSetResponseDto> getSentenceSetById(@RequestParam(defaultValue = "0") int offset,
+                                                                      @RequestParam(defaultValue = "10") int limit) {
+        UserSentenceSetResponseDto userSentenceSetResponseDto = sentenceSetService.getSentenceSetByUser(offset, limit);
+
+        return ApiResponse.ok(userSentenceSetResponseDto);
+    }
+
+    /**
+     * 특정 개인 문장 세트와 포함된 문장 목록 조회 API
      * @param sentenceSetId
      * @param page
      * @return
@@ -29,17 +87,6 @@ public class SentenceSetController {
         SentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getSentenceSetWithSentences(sentenceSetId, page);
 
         return ApiResponse.ok(sentenceSetWithSentences);
-    }
-
-    /**
-     * 사용자의 문장 세트 조회 API
-     * @return
-     */
-    @GetMapping("my/sentence-set")
-    public ApiResponse<List<SentenceSetResponseDto>> getSentenceSetById() {
-        List<SentenceSetResponseDto> sentenceSetList = sentenceSetService.getSentenceSetByUser();
-
-        return ApiResponse.ok(sentenceSetList);
     }
 
     /**

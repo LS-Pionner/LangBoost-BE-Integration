@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class JWTCheckFilter extends BasicAuthenticationFilter {
@@ -31,9 +32,13 @@ public class JWTCheckFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
 
+        String uri = request.getRequestURI();
         // 아래 경로에 대해서는 필터 X
-        if (request.getRequestURI().equals("/api/v1/auth/register") || request.getRequestURI().equals("/api/v1/auth/login")
-                || request.getRequestURI().equals("/api/v1/auth/email-check")) {
+        if (uri.equals("/api/v1/auth/register")
+                || uri.equals("/api/v1/auth/login")
+                || uri.equals("/api/v1/auth/email-check")
+                || uri.equals("/api/v1/auth/reissue")
+                || uri.startsWith("/api/v1/public")) {
             chain.doFilter(request, response);
             return;
         }
@@ -51,22 +56,26 @@ public class JWTCheckFilter extends BasicAuthenticationFilter {
         // 토큰 검증
         VerifyResult result = jwtUtil.verify(token);
 
-        if (result.isSuccess()) {
-            // 유저 검증
-            User user = (User) userService.loadUserByUsername(result.username());
-            UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
-                    user, null, user.getAuthorities()
-            );
+        switch (result.status()) {
+            case SUCCESS:
+                User user = (User) userService.loadUserByUsername(result.username());
+                UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
+                        user, null, user.getAuthorities()
+                );
 
-            // SecurityContext에 인증 객체 저장
-            SecurityContextHolder.getContext().setAuthentication(userToken);
-            log.info("Token successfully verified for user: {}. Request URI: {}", user.getUsername(), request.getRequestURI());
-            chain.doFilter(request, response);
-        } else {
-            // 검증 실패 시 로그 기록
-            log.error("Token verification failed for token: {}.", token);
-
-            throw new JWTAuthenticationException("Invalid or expired token.");
+                // SecurityContext에 인증 객체 저장
+                SecurityContextHolder.getContext().setAuthentication(userToken);
+                log.info("Token successfully verified for user: {}. Request URI: {}", user.getUsername(), request.getRequestURI());
+                chain.doFilter(request, response);
+                break;
+            case EXPIRED:
+                // 토큰 만료 시 로그 기록
+                log.error("Expired Token: {}.", token);
+                throw new JwtTokenExpiredException("Expired Token");
+            case INVALID:
+            default:
+                log.error("Invalid Token: {}.", token);
+                throw new JWTAuthenticationException("Invalid Token.");
         }
     }
 

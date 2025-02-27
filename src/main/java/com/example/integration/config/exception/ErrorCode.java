@@ -16,6 +16,7 @@ public enum ErrorCode implements ErrorCodeInterface {
 
     // 401 Unauthorized - 잘못된 토큰
     INVALID_TOKEN(40101, HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
+    EXPIRED_TOKEN(40102, HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
     INVALID_REFRESH_TOKEN(40201, HttpStatus.UNAUTHORIZED, "리프레시 토큰이 유효하지 않습니다"),
     NOT_MATCHED_REFRESH_TOKEN(40202, HttpStatus.UNAUTHORIZED, "리프레시 토큰이 일치하지 않습니다"),
 

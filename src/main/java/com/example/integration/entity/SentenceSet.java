@@ -23,9 +23,6 @@ public class SentenceSet extends BaseEntity {
     // 제목
     private String title;
 
-    // 문장 세트 설명
-    private String description;
-
     // 공용 조회 여부
     private boolean isPublic;
 
@@ -40,9 +37,8 @@ public class SentenceSet extends BaseEntity {
     private List<Sentence> sentenceList = new ArrayList<>();
 
     @Builder
-    public SentenceSet(String title, String description, boolean isPublic, User user) {
+    public SentenceSet(String title, boolean isPublic, User user) {
         this.title = title;
-        this.description = description;
         this.isPublic = isPublic;
         this.lastViewedDate = DateUtil.getLastViewedDate();
         this.user = user;
@@ -50,10 +46,8 @@ public class SentenceSet extends BaseEntity {
         user.getSentenceSetList().add(this);
     }
 
-    public void updateSentenceSet(String title, String description, boolean isPublic) {
+    public void updateSentenceSet(String title) {
         this.title = title;
-        this.description = description;
-        this.isPublic = isPublic;
     }
 
     public void updateLastViewedDate(LocalDate lastViewedDate) {

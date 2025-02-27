@@ -2,6 +2,7 @@ package com.example.integration.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.integration.entity.User;
 import com.example.integration.entity.dto.user.VerifyResult;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Component
 public class JWTUtil {
@@ -65,11 +67,17 @@ public class JWTUtil {
         try {
             // 검증 성공
             DecodedJWT verify = JWT.require(algorithm).build().verify(token);
-            return new VerifyResult(true, verify.getSubject());
-        } catch (Exception ex) {
+            return new VerifyResult(TokenStatus.SUCCESS, verify.getSubject());
+        } catch (JWTVerificationException ex) {
             // 검증 실패
             DecodedJWT decode = JWT.decode(token);
-            return new VerifyResult(false, decode.getSubject());
+
+            if (decode.getExpiresAt() != null && decode.getExpiresAt().before(new Date())) {
+                // 만료된 경우
+                return new VerifyResult(TokenStatus.EXPIRED, decode.getSubject());
+            }
+
+            return new VerifyResult(TokenStatus.INVALID, decode.getSubject());
         }
     }
 }
