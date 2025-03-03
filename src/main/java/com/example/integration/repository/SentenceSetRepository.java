@@ -30,4 +30,8 @@ public interface SentenceSetRepository extends JpaRepository<SentenceSet, Long> 
             "where ss.user.id = :userId " +
             "order by ss.createdDate desc, ss.title asc")
     List<SentenceSet> findAllByUserId(Long userId, Pageable pageable);
+
+    // 사용자 문장 세트 개수 반환
+    @Query("SELECT COUNT(ss) FROM SentenceSet ss WHERE ss.user.id = :userId")
+    long countByUser(Long userId);
 }
