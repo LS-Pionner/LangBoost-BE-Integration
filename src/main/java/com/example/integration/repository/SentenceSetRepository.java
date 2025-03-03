@@ -13,7 +13,7 @@ public interface SentenceSetRepository extends JpaRepository<SentenceSet, Long> 
             "from SentenceSet ss " +
             "left join fetch ss.sentenceList " +
             "where ss.isPublic = true " +
-            "order by ss.createdDate desc, ss.title asc")
+            "order by ss.createdDate desc")
     List<SentenceSet> findAllWhichPublic(Pageable pageable);
 
     @Query("select ss " +
@@ -28,6 +28,6 @@ public interface SentenceSetRepository extends JpaRepository<SentenceSet, Long> 
             "from SentenceSet ss " +
             "left join fetch ss.sentenceList " +
             "where ss.user.id = :userId " +
-            "order by ss.createdDate desc, ss.title asc")
+            "order by ss.createdDate desc")
     List<SentenceSet> findAllByUserId(Long userId, Pageable pageable);
 }
