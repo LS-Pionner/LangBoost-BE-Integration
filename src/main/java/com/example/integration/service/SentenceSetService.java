@@ -37,7 +37,6 @@ public class SentenceSetService {
      * 현재 사용자 조회
      * @return
      */
-    @Transactional(readOnly = true)
     private User currentUser() {
         return userRepository.findByEmail(SecurityUtil.getCurrentMember()).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER)
@@ -49,7 +48,6 @@ public class SentenceSetService {
      * @param sentenceSetId
      * @return
      */
-    @Transactional(readOnly = true)
     private SentenceSet findSentenceSetWithId(Long sentenceSetId) {
         return sentenceSetRepository.findById(sentenceSetId)
                 .orElseThrow(() -> new CustomException(ErrorCode.SENTENCE_SET_NOT_FOUND));
