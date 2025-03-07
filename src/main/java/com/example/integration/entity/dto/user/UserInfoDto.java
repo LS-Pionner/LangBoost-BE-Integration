@@ -5,6 +5,7 @@ public record UserInfoDto(
         String email,
         String username,
         String password,
-        boolean enabled
+        boolean enabled,
+        boolean isAdmin
 ) {
 }

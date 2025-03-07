@@ -1,10 +1,7 @@
 package com.example.integration.controller;
 
 import com.example.api.response.ApiResponse;
-import com.example.integration.entity.dto.user.TokenDto;
-import com.example.integration.entity.dto.user.UserInfoAndTokenDto;
-import com.example.integration.entity.dto.user.UserLoginForm;
-import com.example.integration.entity.dto.user.UserRegisterDto;
+import com.example.integration.entity.dto.user.*;
 import com.example.integration.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -64,7 +61,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/login")
-    public ApiResponse<String> login(@RequestBody UserLoginForm loginForm, HttpServletResponse response) {
+    public ApiResponse<UserInfoDto> login(@RequestBody UserLoginForm loginForm, HttpServletResponse response) {
         UserInfoAndTokenDto userInfoAndTokenDto = userService.loginUser(loginForm);
 
         // 쿠키로 전달
@@ -79,7 +76,7 @@ public class AuthController {
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + userInfoAndTokenDto.tokenDto().accessToken());
         response.setHeader("Set-Cookie", cookie.toString());
 
-        return ApiResponse.ok("로그인 성공");
+        return ApiResponse.ok(userInfoAndTokenDto.userInfoDto());
     }
 
     /**

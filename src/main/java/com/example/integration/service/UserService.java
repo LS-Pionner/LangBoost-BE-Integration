@@ -86,7 +86,8 @@ public class UserService implements UserDetailsService {
         tokenService.saveRefreshTokenToRedis(user.getEmail(), refreshToken, jwtUtil.getRefreshTime());
 
         TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
-        UserInfoDto userInfoDto = new UserInfoDto(user.getId(), user.getEmail(), user.getUsername(), user.getPassword(), user.isEnabled());
+        boolean isAdmin = user.getRoleType().equals(RoleType.ADMIN);
+        UserInfoDto userInfoDto = new UserInfoDto(user.getId(), user.getEmail(), user.getUsername(), user.getPassword(), user.isEnabled(), isAdmin);
 
         return new UserInfoAndTokenDto(userInfoDto, tokenDto);
     }
