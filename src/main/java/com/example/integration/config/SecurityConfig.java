@@ -75,6 +75,7 @@ public class SecurityConfig {
                                 .requestMatchers(whiteList).permitAll() // 이 경로들은 인증 없이 접근 가능
                                 .requestMatchers("/api/v1/auth/logout").authenticated() // 로그아웃은 권한에 상관없이 접근 가능
                                 .requestMatchers("/api/v1/auth/**").hasAnyRole(RoleType.USER.name(), RoleType.ADMIN.name()) // 나머지 모든 요청은 USER 권한 필요
+                                .requestMatchers("/api/v1/admin/**").hasRole(RoleType.ADMIN.name())    // 관리자 권한만 접근 가능
                                 .anyRequest().permitAll()
                 ).exceptionHandling(exception ->
                         exception

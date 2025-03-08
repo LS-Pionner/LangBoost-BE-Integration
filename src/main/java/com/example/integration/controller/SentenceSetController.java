@@ -16,52 +16,6 @@ public class SentenceSetController {
     private final SentenceSetService sentenceSetService;
 
     /**
-     * 공용 문장 세트 목록 조회 API
-     * @param offset
-     * @param limit
-     * @return
-     */
-    @GetMapping("/public/sentence-set")
-    public ApiResponse<ListSentenceSetResponseDto> getPublicSentenceSetList(@RequestParam(defaultValue = "0") int offset,
-                                                                      @RequestParam(defaultValue = "10") int limit) {
-        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.getPublicSentenceSetList(offset, limit);
-        log.info("offset: {}", offset);
-        return ApiResponse.ok(listSentenceSetResponseDto);
-    }
-
-    /**
-     * 키워드로 문장 세트 목록 검색 API
-     * 현재는 공용 모든 문장 세트에 대해서 검색
-     * (추후 공용 여부에 따라 쿼리 수정)
-     * @param keyword
-     * @param offset
-     * @param limit
-     * @return
-     */
-    @GetMapping("/public/sentence-set/search")
-    public ApiResponse<ListSentenceSetResponseDto> searchPublicSentenceSetList(@RequestParam(name = "keyword", defaultValue = "") String keyword,
-                                                                         @RequestParam(defaultValue = "0") int offset,
-                                                                         @RequestParam(defaultValue = "10") int limit) {
-        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.searchPublicSentenceSetList(keyword, offset, limit);
-
-        return ApiResponse.ok(listSentenceSetResponseDto);
-    }
-
-    /**
-     * 특정 공용 문장 세트와 포함된 문장 목록 조회 API
-     * @param sentenceSetId
-     * @param page
-     * @return
-     */
-    @GetMapping("/public/sentence-set/{sentenceSetId}")
-    public ApiResponse<PublicSentenceSetAndPagingResponseDto> getPublicSentenceSetWithSentences(@PathVariable Long sentenceSetId,
-                                                                                    @RequestParam(defaultValue = "0") int page) {
-        PublicSentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getPublicSentenceSetWithSentences(sentenceSetId, page);
-
-        return ApiResponse.ok(sentenceSetWithSentences);
-    }
-
-    /**
      * 개인 문장 세트 목록 조회 API
      * @param offset
      * @param limit
@@ -90,7 +44,7 @@ public class SentenceSetController {
     }
 
     /**
-     * 새로운 문장 세트 생성 API
+     * 새로운 개인 문장 세트 생성 API
      * @param sentenceSetRequestDto
      * @return
      */
