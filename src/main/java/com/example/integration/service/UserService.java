@@ -9,6 +9,7 @@ import com.example.integration.entity.User;
 import com.example.integration.entity.dto.user.*;
 import com.example.integration.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -73,23 +74,39 @@ public class UserService implements UserDetailsService {
      */
     @Transactional
     public UserInfoAndTokenDto loginUser(UserLoginForm loginForm) {
-        loadUserByUsername(loginForm.getUsername());
+        try {
+            // 사용자 이름으로 로드
+            loadUserByUsername(loginForm.getUsername());
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword());
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword());
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = (User) authentication.getPrincipal();
+            // 인증 시도
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String accessToken = jwtUtil.makeAccessToken(user);
-        String refreshToken = jwtUtil.makeRefreshToken(user);
-        tokenService.saveRefreshTokenToRedis(user.getEmail(), refreshToken, jwtUtil.getRefreshTime());
+            // 인증된 사용자 정보 가져오기
+            User user = (User) authentication.getPrincipal();
 
-        TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
-        UserInfoDto userInfoDto = new UserInfoDto(user.getId(), user.getEmail(), user.getUsername(), user.getPassword(), user.isEnabled());
+            // 액세스 토큰과 리프레시 토큰 생성
+            String accessToken = jwtUtil.makeAccessToken(user);
+            String refreshToken = jwtUtil.makeRefreshToken(user);
 
-        return new UserInfoAndTokenDto(userInfoDto, tokenDto);
+            // 리프레시 토큰을 Redis에 저장
+            tokenService.saveRefreshTokenToRedis(user.getEmail(), refreshToken, jwtUtil.getRefreshTime());
+
+            // 응답할 토큰 DTO와 사용자 정보 DTO 생성
+            TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
+            UserInfoDto userInfoDto = new UserInfoDto(user.getId(), user.getEmail(), user.getUsername(), user.getPassword(), user.isEnabled());
+
+            return new UserInfoAndTokenDto(userInfoDto, tokenDto);
+        } catch (BadCredentialsException e) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.LOGIN_ERROR);
+        }
     }
+
+
 
     /**
      * 사용자 로그아웃
