@@ -7,14 +7,11 @@ import com.example.integration.entity.RoleType;
 import com.example.integration.entity.Sentence;
 import com.example.integration.entity.SentenceSet;
 import com.example.integration.entity.User;
-import com.example.integration.entity.dto.sentence.PagingResponseDto;
-import com.example.integration.entity.dto.sentence.PublicSentenceResponseDto;
 import com.example.integration.entity.dto.sentenceSet.*;
 import com.example.integration.repository.SentenceRepository;
 import com.example.integration.repository.SentenceSetRepository;
 import com.example.integration.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -92,11 +89,12 @@ public class PublicSentenceSetService {
     /**
      * 특정 공용 문장 세트와 포함된 문장 목록 조회
      * @param sentenceSetId
-     * @param page
+     * @param offset
+     * @param limit
      * @return
      */
     @Transactional(readOnly = true)
-    public PublicSentenceSetAndPagingResponseDto getPublicSentenceSetWithSentences(Long sentenceSetId, int page) {
+    public PublicSentenceSetAndSentenceListResponseDto getPublicSentenceSetWithSentences(Long sentenceSetId, int offset, int limit) {
         SentenceSet sentenceSet = findSentenceSetWithId(sentenceSetId);
 
         // 개인 문장 세트 조회일 때
@@ -105,16 +103,11 @@ public class PublicSentenceSetService {
         }
 
         // 10개 페이징
-        Pageable pageable = PageRequest.of(page, 10);
-        Page<Sentence> sentencesPage = sentenceRepository.findBySentenceSetId(sentenceSet.getId(), pageable);
+        Pageable pageable = PageRequest.of(offset / limit, limit);
 
-        PublicSentenceSetResponseDto sentenceSetResponseDto = new PublicSentenceSetResponseDto(sentenceSet);
+        List<Sentence> sentenceList = sentenceRepository.findAllBySentenceSetId(sentenceSetId, pageable);
 
-        Page<PublicSentenceResponseDto> sentenceResponseDtoPage = sentencesPage.map(PublicSentenceResponseDto::new);
-
-        PagingResponseDto<PublicSentenceResponseDto> pagingResponseDto = PagingResponseDto.of(sentenceResponseDtoPage);
-
-        return new PublicSentenceSetAndPagingResponseDto(sentenceSetResponseDto, pagingResponseDto);
+        return new PublicSentenceSetAndSentenceListResponseDto(sentenceSet, sentenceList);
     }
 
     /**

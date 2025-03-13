@@ -50,13 +50,15 @@ public class PublicSentenceSetController {
     /**
      * 특정 공용 문장 세트와 포함된 문장 목록 조회 API
      * @param sentenceSetId
-     * @param page
+     * @param offset
+     * @param limit
      * @return
      */
     @GetMapping("/public/sentence-set/{sentenceSetId}")
-    public ApiResponse<PublicSentenceSetAndPagingResponseDto> getPublicSentenceSetWithSentences(@PathVariable Long sentenceSetId,
-                                                                                                @RequestParam(defaultValue = "0") int page) {
-        PublicSentenceSetAndPagingResponseDto sentenceSetWithSentences = publicSentenceSetService.getPublicSentenceSetWithSentences(sentenceSetId, page);
+    public ApiResponse<PublicSentenceSetAndSentenceListResponseDto> getPublicSentenceSetWithSentences(@PathVariable Long sentenceSetId,
+                                                                                                      @RequestParam(defaultValue = "0") int offset,
+                                                                                                      @RequestParam(defaultValue = "10") int limit) {
+        PublicSentenceSetAndSentenceListResponseDto sentenceSetWithSentences = publicSentenceSetService.getPublicSentenceSetWithSentences(sentenceSetId, offset, limit);
 
         return ApiResponse.ok(sentenceSetWithSentences);
     }

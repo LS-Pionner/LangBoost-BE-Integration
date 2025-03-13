@@ -32,13 +32,15 @@ public class SentenceSetController {
     /**
      * 특정 개인 문장 세트와 포함된 문장 목록 조회 API
      * @param sentenceSetId
-     * @param page
+     * @param offset
+     * @param limit
      * @return
      */
     @GetMapping("/sentence-set/{sentenceSetId}")
-    public ApiResponse<SentenceSetAndPagingResponseDto> getSentenceSetWithSentences(@PathVariable Long sentenceSetId,
-                                                                                    @RequestParam(defaultValue = "0") int page) {
-        SentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getSentenceSetWithSentences(sentenceSetId, page);
+    public ApiResponse<SentenceSetAndSentenceListResponseDto> getSentenceSetWithSentences(@PathVariable Long sentenceSetId,
+                                                                                          @RequestParam(defaultValue = "0") int offset,
+                                                                                          @RequestParam(defaultValue = "10") int limit) {
+        SentenceSetAndSentenceListResponseDto sentenceSetWithSentences = sentenceSetService.getSentenceSetWithSentences(sentenceSetId, offset, limit);
 
         return ApiResponse.ok(sentenceSetWithSentences);
     }
