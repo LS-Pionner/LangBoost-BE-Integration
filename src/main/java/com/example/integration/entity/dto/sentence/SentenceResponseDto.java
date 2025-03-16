@@ -8,7 +8,7 @@ public record SentenceResponseDto(
         String content,
         String meaning,
         String description,
-        LearningStatus learningStatus
+        String learningStatus
 ) {
     public SentenceResponseDto(Sentence sentence) {
         this(
@@ -16,7 +16,7 @@ public record SentenceResponseDto(
                 sentence.getContent(),
                 sentence.getMeaning(),
                 sentence.getDescription(),
-                sentence.getLearningStatus()
+                sentence.getLearningStatus().getDescription()
         );
     }
 
