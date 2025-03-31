@@ -3,6 +3,7 @@ package com.example.integration.controller;
 import com.example.api.response.ApiResponse;
 import com.example.integration.entity.dto.user.*;
 import com.example.integration.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,17 @@ public class AuthController {
     @PostMapping("/logout")
     public ApiResponse<String> logout(HttpServletResponse response) {
         userService.logoutUser();
-        response.addHeader("Set-Cookie", "RefreshToken=; Max-Age=0; path=/; SameSite=Lax"); // 브라우저에 저장된 쿠키 삭제
+//        response.addHeader("Set-Cookie", "RefreshToken=; Max-Age=0; path=/; SameSite=Lax"); // 브라우저에 저장된 쿠키 삭제
+
+        Cookie refreshTokenCookie = new Cookie("RefreshToken", "");
+        refreshTokenCookie.setMaxAge(0);
+        refreshTokenCookie.setPath("/");
+        response.addCookie(refreshTokenCookie);
+
+        Cookie isAdminCookie = new Cookie("isAdmin", "");
+        isAdminCookie.setMaxAge(0);
+        isAdminCookie.setPath("/");
+        response.addCookie(isAdminCookie);
 
         return ApiResponse.ok("로그아웃 성공");
     }
@@ -64,17 +75,32 @@ public class AuthController {
     public ApiResponse<UserInfoDto> login(@RequestBody UserLoginForm loginForm, HttpServletResponse response) {
         UserInfoAndTokenDto userInfoAndTokenDto = userService.loginUser(loginForm);
 
-        // 쿠키로 전달
-        ResponseCookie cookie = ResponseCookie
-                .from("RefreshToken", userInfoAndTokenDto.tokenDto().refreshToken())
-                .maxAge(60 * 60 * 24 * 7)   // 7일
-                .path("/")
-                .sameSite("Lax")
-                .httpOnly(false)    // 브라우저에서 토큰 접근을 위함
-                .build();
+        // RefreshToken 쿠키 설정
+        Cookie refreshTokenCookie = new Cookie("RefreshToken", userInfoAndTokenDto.tokenDto().refreshToken());
+        refreshTokenCookie.setMaxAge(60 * 60 * 24 * 7); // 7일
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setHttpOnly(false);
+        response.addCookie(refreshTokenCookie);
+
+        // 관리자 여부 쿠키 설정
+        Cookie isAdminCookie = new Cookie("isAdmin", String.valueOf(userInfoAndTokenDto.userInfoDto().isAdmin()));
+        isAdminCookie.setMaxAge(60 * 60 * 24 * 7);
+        isAdminCookie.setPath("/");
+        isAdminCookie.setHttpOnly(false);
+        response.addCookie(isAdminCookie);
+
+//        ResponseCookie adminCookie = ResponseCookie
+//                .from("isAdmin", String.valueOf(userInfoAndTokenDto.userInfoDto().isAdmin()))
+//                .maxAge(60 * 60 * 24 * 7)
+//                .path("/")
+//                .sameSite("Lax")
+//                .httpOnly(false)
+//                .build();
+//
+//
+//        response.setHeader("Set-Cookie", cookie.toString());
 
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + userInfoAndTokenDto.tokenDto().accessToken());
-        response.setHeader("Set-Cookie", cookie.toString());
 
         return ApiResponse.ok(userInfoAndTokenDto.userInfoDto());
     }
