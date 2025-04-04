@@ -4,6 +4,7 @@ import com.example.api.response.CustomException;
 import com.example.integration.config.exception.ErrorCode;
 import com.example.integration.config.jwt.JWTUtil;
 import com.example.integration.config.jwt.TokenStatus;
+import com.example.integration.config.util.SecurityUtil;
 import com.example.integration.entity.RoleType;
 import com.example.integration.entity.User;
 import com.example.integration.entity.dto.user.*;
@@ -33,6 +34,17 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_USER)
+        );
+    }
+
+    /**
+     * 현재 사용자 조회
+     * @return User 객체
+     */
+    @Transactional(readOnly = true)
+    public User currentUser() {
+        return userRepository.findByEmail(SecurityUtil.getCurrentMember()).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER)
         );
     }
@@ -159,5 +171,31 @@ public class UserService implements UserDetailsService {
 
         return new TokenDto(reissuedAccessToken, reissuedRefreshToken);
     }
+
+    /**
+     * 비밀번호 변경
+     * @param passwordChangeDto
+     */
+    @Transactional
+    public void changePassword(PasswordChangeDto passwordChangeDto) {
+        User user = currentUser();
+
+        // 현재 비밀번호 검증
+        if (!passwordEncoder.matches(passwordChangeDto.currentPassword(), user.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);  // 현재 비밀번호가 틀린 경우 예외 처리
+        }
+
+        // 새 비밀번호 암호화
+        String encodedNewPassword = passwordEncoder.encode(passwordChangeDto.newPassword());
+
+        // 새로운 비밀번호로 업데이트
+        User updatedUser = user.toBuilder()
+                .password(encodedNewPassword)
+                .build();
+
+        userRepository.save(updatedUser);
+    }
+
+
 
 }

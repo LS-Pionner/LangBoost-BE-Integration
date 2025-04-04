@@ -20,7 +20,7 @@ public enum ErrorCode implements ErrorCodeInterface {
     INVALID_REFRESH_TOKEN(40103, HttpStatus.UNAUTHORIZED, "리프레시 토큰이 유효하지 않습니다"),
     NOT_MATCHED_REFRESH_TOKEN(40104, HttpStatus.UNAUTHORIZED, "리프레시 토큰이 일치하지 않습니다"),
     INVALID_PASSWORD(40105, HttpStatus.UNAUTHORIZED, "비밀번호 에러"),
-    LOGIN_ERROR(40105, HttpStatus.UNAUTHORIZED, "로그인 에러"),
+    LOGIN_ERROR(40106, HttpStatus.UNAUTHORIZED, "로그인 에러"),
 
 
     // 403 Forbidden

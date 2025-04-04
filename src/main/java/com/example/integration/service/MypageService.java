@@ -16,20 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MypageService {
 
+    private final UserService userService;
     private final SentenceSetRepository sentenceSetRepository;
     private final SentenceRepository sentenceRepository;
     private final UserRepository userRepository;
 
+
     /**
-     * 현재 사용자 조회
-     * @return User 객체
+     * 현재 사용자의 이메일을 반환하는 메서드
+     * @return 현재 사용자의 이메일
      */
     @Transactional(readOnly = true)
-    private User currentUser() {
-        return userRepository.findByEmail(SecurityUtil.getCurrentMember()).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_USER)
-        );
+    public String getCurrentUserEmail() {
+        return userService.currentUser().getEmail();
     }
+
 
     /**
      * 현재 사용자의 SentenceSet 개수 조회
@@ -37,7 +38,7 @@ public class MypageService {
      */
     @Transactional(readOnly = true)
     public long getUserSentenceSetCount() {
-        User user = currentUser();
+        User user = userService.currentUser();
         return sentenceSetRepository.countByUser(user.getId());
     }
 
@@ -47,7 +48,7 @@ public class MypageService {
      */
     @Transactional(readOnly = true)
     public SentenceLearningStatusesDto getUserSentenceStatistics() {
-        User user = currentUser();
+        User user = userService.currentUser();
 
         long totalSentences = sentenceRepository.countByUserId(user.getId());
         long learningStatusInProgress = sentenceRepository.countByUserIdAndLearningStatusInProgress(user.getId());
@@ -56,6 +57,6 @@ public class MypageService {
         return new SentenceLearningStatusesDto(totalSentences, learningStatusInProgress, learningStatusCompleted);
     }
 
-
+    
 
 }

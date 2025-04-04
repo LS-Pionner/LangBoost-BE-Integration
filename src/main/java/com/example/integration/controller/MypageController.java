@@ -2,19 +2,28 @@ package com.example.integration.controller;
 
 import com.example.api.response.ApiResponse;
 import com.example.integration.entity.dto.mypage.SentenceLearningStatusesDto;
+import com.example.integration.entity.dto.user.PasswordChangeDto;
 import com.example.integration.service.MypageService;
-import com.example.integration.service.SentenceService;
+import com.example.integration.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
 public class MypageController {
     private final MypageService mypageService;
+    private final UserService userService;
 
+    /**
+     * 현재 사용자의 이메일을 반환하는 API
+     * @return 사용자의 이메일
+     */
+    @GetMapping("/user/email")
+    public ApiResponse<String> getUserEmail() {
+        String email = mypageService.getCurrentUserEmail();
+        return ApiResponse.ok(email);
+    }
 
     /**
      * 현재 사용자의 문장 세트 개수를 반환하는 API
@@ -34,6 +43,17 @@ public class MypageController {
     public ApiResponse<SentenceLearningStatusesDto> getUserSentenceStatistics() {
         SentenceLearningStatusesDto sentenceStatistics = mypageService.getUserSentenceStatistics();
         return ApiResponse.ok(sentenceStatistics);
+    }
+
+    /**
+     * 비밀번호 변경 API
+     * @param passwordChangeDto 현재 비밀번호와 새 비밀번호를 담고 있는 DTO
+     * @return 성공 메시지
+     */
+    @PostMapping("/user/password")
+    public ApiResponse<String> changePassword(@RequestBody PasswordChangeDto passwordChangeDto) {
+        userService.changePassword(passwordChangeDto);
+        return ApiResponse.ok("Password changed successfully");
     }
 
 }

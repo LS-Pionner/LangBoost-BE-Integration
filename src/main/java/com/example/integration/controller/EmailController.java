@@ -19,7 +19,7 @@ public class EmailController {
     private final EmailService emailService;
 
     /**
-     * 인증코드가 담긴 메일 송신 API
+     * 인증코드를 받기 위한 이메일 송신 API
      * @param emailDto
      * @return
      * @throws MessagingException

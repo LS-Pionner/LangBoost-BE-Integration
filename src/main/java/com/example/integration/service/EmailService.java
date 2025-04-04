@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.util.Optional;
 import java.util.Random;
@@ -25,6 +27,8 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
     private final RedisUtil redisUtil;
     private final UserRepository userRepository;
+    private final TemplateEngine templateEngine;
+
     private static final String senderEmail = "jj@naver.com";
 
     /**
@@ -48,14 +52,13 @@ public class EmailService {
      * @param code
      * @return
      */
-    private String setContext(String code) {
-        return "<html>" +
-                "<body>" +
-                "<h1>안녕하세요!</h1>" +
-                "<p>인증 코드: <strong>" + code + "</strong></p>" +
-                "<p>이 코드를 인증 화면에 입력해 주세요.</p>" +
-                "</body>" +
-                "</html>";
+    // 이메일 내용 초기화
+    private String setVerificationEmailContext(String code) {
+        Context context = new Context();
+        context.setVariable("code", code); // 코드 값 템플릿에 전달
+
+        // Thymeleaf 템플릿 파일을 사용하여 HTML 생성
+        return templateEngine.process("verification-email", context);
     }
 
     /**
@@ -74,7 +77,7 @@ public class EmailService {
         message.addRecipients(MimeMessage.RecipientType.TO, email);
         message.setSubject("안녕하세요. 인증번호입니다.");
         message.setFrom(senderEmail);
-        message.setText(setContext(authCode), "utf-8", "html");
+        message.setText(setVerificationEmailContext(authCode), "utf-8", "html");
 
         String redisKey = purpose + ":" + email;
 

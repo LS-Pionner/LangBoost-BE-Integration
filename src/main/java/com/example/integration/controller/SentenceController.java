@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class SentenceController {
 
     private final SentenceService sentenceService;
-
     /**
      * 문장 세트에 새로운 문장 생성 API
      * @param sentenceSetId

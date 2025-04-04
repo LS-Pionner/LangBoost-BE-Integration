@@ -62,7 +62,7 @@ public class User implements UserDetails {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + roleType.name()));
     }
 
-    @Builder
+    @Builder(toBuilder = true)
     public User(String email, String password, RoleType roleType, boolean enabled) {
         this.email = email;
         this.password = password;
