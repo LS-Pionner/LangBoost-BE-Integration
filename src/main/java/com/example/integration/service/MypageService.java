@@ -1,10 +1,7 @@
 package com.example.integration.service;
 
-import com.example.api.response.CustomException;
-import com.example.integration.config.exception.ErrorCode;
-import com.example.integration.config.util.SecurityUtil;
 import com.example.integration.entity.User;
-import com.example.integration.entity.dto.mypage.SentenceLearningStatusesDto;
+import com.example.integration.dto.mypage.SentenceLearningStatusesDto;
 import com.example.integration.repository.SentenceRepository;
 import com.example.integration.repository.SentenceSetRepository;
 import com.example.integration.repository.UserRepository;

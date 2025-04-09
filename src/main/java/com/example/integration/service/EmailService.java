@@ -1,12 +1,11 @@
 package com.example.integration.service;
 
-import com.example.api.response.CustomException;
-import com.example.api.response.DefaultErrorCode;
-import com.example.integration.config.exception.ErrorCode;
-import com.example.integration.config.util.RedisUtil;
+import com.example.integration.response.CustomException;
+import com.example.integration.response.ErrorCode;
+import com.example.integration.common.util.RedisUtil;
 import com.example.integration.entity.RoleType;
 import com.example.integration.entity.User;
-import com.example.integration.entity.dto.email.EmailDto;
+import com.example.integration.dto.email.EmailDto;
 import com.example.integration.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -142,7 +141,7 @@ public class EmailService {
         } catch (Exception e) {
             // 사용자 저장 중 오류가 발생한 경우
             log.error("Failed to enable user with email: {}", email, e);
-            throw new CustomException(DefaultErrorCode.INTERNAL_SERVER_ERROR); // 내부 서버 오류
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR); // 내부 서버 오류
         }
 
         // 성공적으로 활성화 처리된 경우

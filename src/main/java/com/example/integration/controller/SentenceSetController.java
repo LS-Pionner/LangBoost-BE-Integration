@@ -1,7 +1,7 @@
 package com.example.integration.controller;
 
-import com.example.api.response.ApiResponse;
-import com.example.integration.entity.dto.sentenceSet.*;
+import com.example.integration.dto.sentenceSet.*;
+import com.example.integration.response.ApiResponse;
 import com.example.integration.service.SentenceSetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class SentenceSetController {
      */
     @GetMapping("/public/sentence-set")
     public ApiResponse<ListSentenceSetResponseDto> getPublicSentenceSetList(@RequestParam(defaultValue = "0") int offset,
-                                                                      @RequestParam(defaultValue = "10") int limit) {
+                                                                            @RequestParam(defaultValue = "10") int limit) {
         ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.getPublicSentenceSetList(offset, limit);
         log.info("offset: {}", offset);
         return ApiResponse.ok(listSentenceSetResponseDto);
@@ -55,7 +55,7 @@ public class SentenceSetController {
      */
     @GetMapping("/public/sentence-set/{sentenceSetId}")
     public ApiResponse<PublicSentenceSetAndPagingResponseDto> getPublicSentenceSetWithSentences(@PathVariable Long sentenceSetId,
-                                                                                    @RequestParam(defaultValue = "0") int page) {
+                                                                                                @RequestParam(defaultValue = "0") int page) {
         PublicSentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getPublicSentenceSetWithSentences(sentenceSetId, page);
 
         return ApiResponse.ok(sentenceSetWithSentences);

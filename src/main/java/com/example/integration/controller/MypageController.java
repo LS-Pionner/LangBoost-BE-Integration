@@ -1,8 +1,8 @@
 package com.example.integration.controller;
 
-import com.example.api.response.ApiResponse;
-import com.example.integration.entity.dto.mypage.SentenceLearningStatusesDto;
-import com.example.integration.entity.dto.user.PasswordChangeDto;
+import com.example.integration.dto.mypage.SentenceLearningStatusesDto;
+import com.example.integration.dto.user.PasswordChangeDto;
+import com.example.integration.response.ApiResponse;
 import com.example.integration.service.MypageService;
 import com.example.integration.service.UserService;
 import lombok.RequiredArgsConstructor;

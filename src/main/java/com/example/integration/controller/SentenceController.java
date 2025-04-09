@@ -1,9 +1,9 @@
 package com.example.integration.controller;
 
-import com.example.api.response.ApiResponse;
-import com.example.integration.entity.dto.sentence.LearningStatusRequestDto;
-import com.example.integration.entity.dto.sentence.SentenceRequestDto;
-import com.example.integration.entity.dto.sentence.SentenceResponseDto;
+import com.example.integration.dto.sentence.LearningStatusRequestDto;
+import com.example.integration.dto.sentence.SentenceRequestDto;
+import com.example.integration.dto.sentence.SentenceResponseDto;
+import com.example.integration.response.ApiResponse;
 import com.example.integration.service.SentenceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

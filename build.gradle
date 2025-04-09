@@ -22,13 +22,6 @@ java {
 repositories {
 	mavenCentral()
 	mavenLocal()
-	maven {
-		url = uri("https://maven.pkg.github.com/LS-Pionner/LangBoost-BE-api-response-library")
-		credentials {
-			username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-			password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
-		}
-	}
 }
 
 dependencies {
@@ -69,11 +62,17 @@ dependencies {
 	// GCP TTS API
 	implementation 'com.google.cloud:google-cloud-texttospeech:2.56.0'
 
-	// github에서 api-response 라이브러리 가져옴
-	implementation 'com.practice:api-response-library:1.0.2'
 
 	// AOP
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+
+	// validation
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
+	// validator
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+
 
 	// logstash가 logback을 이해할 수 있도록 인코딩하기 위함
 //    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'

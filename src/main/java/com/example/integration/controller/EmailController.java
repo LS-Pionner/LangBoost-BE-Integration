@@ -1,7 +1,7 @@
 package com.example.integration.controller;
 
-import com.example.api.response.ApiResponse;
-import com.example.integration.entity.dto.email.EmailDto;
+import com.example.integration.dto.email.EmailDto;
+import com.example.integration.response.ApiResponse;
 import com.example.integration.service.EmailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;

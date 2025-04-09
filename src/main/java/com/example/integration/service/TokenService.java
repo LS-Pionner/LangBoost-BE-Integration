@@ -1,6 +1,6 @@
 package com.example.integration.service;
 
-import com.example.integration.config.util.RedisUtil;
+import com.example.integration.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

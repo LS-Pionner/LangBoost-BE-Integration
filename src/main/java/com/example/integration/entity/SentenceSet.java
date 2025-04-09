@@ -1,7 +1,7 @@
 package com.example.integration.entity;
 
-import com.example.integration.config.util.BaseEntity;
-import com.example.integration.config.util.DateUtil;
+import com.example.integration.common.util.BaseEntity;
+import com.example.integration.common.util.DateUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

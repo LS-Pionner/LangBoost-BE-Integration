@@ -1,13 +1,13 @@
 package com.example.integration.service;
 
-import com.example.api.response.CustomException;
-import com.example.integration.config.exception.ErrorCode;
+import com.example.integration.response.CustomException;
+import com.example.integration.response.ErrorCode;
 import com.example.integration.entity.LearningStatus;
 import com.example.integration.entity.Sentence;
 import com.example.integration.entity.SentenceSet;
-import com.example.integration.entity.dto.sentence.LearningStatusRequestDto;
-import com.example.integration.entity.dto.sentence.SentenceRequestDto;
-import com.example.integration.entity.dto.sentence.SentenceResponseDto;
+import com.example.integration.dto.sentence.LearningStatusRequestDto;
+import com.example.integration.dto.sentence.SentenceRequestDto;
+import com.example.integration.dto.sentence.SentenceResponseDto;
 import com.example.integration.repository.SentenceRepository;
 import com.example.integration.repository.SentenceSetRepository;
 import lombok.RequiredArgsConstructor;

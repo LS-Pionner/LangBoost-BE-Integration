@@ -1,10 +1,10 @@
 package com.example.integration.controller;
 
-import com.example.api.response.ApiResponse;
-import com.example.integration.entity.dto.user.TokenDto;
-import com.example.integration.entity.dto.user.UserInfoAndTokenDto;
-import com.example.integration.entity.dto.user.UserLoginForm;
-import com.example.integration.entity.dto.user.UserRegisterDto;
+import com.example.integration.dto.user.TokenDto;
+import com.example.integration.dto.user.UserInfoAndTokenDto;
+import com.example.integration.dto.user.UserLoginForm;
+import com.example.integration.dto.user.UserRegisterDto;
+import com.example.integration.response.ApiResponse;
 import com.example.integration.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,13 +1,13 @@
 package com.example.integration.service;
 
-import com.example.api.response.CustomException;
-import com.example.integration.config.exception.ErrorCode;
-import com.example.integration.config.jwt.JWTUtil;
-import com.example.integration.config.jwt.TokenStatus;
-import com.example.integration.config.util.SecurityUtil;
+import com.example.integration.response.CustomException;
+import com.example.integration.response.ErrorCode;
+import com.example.integration.common.config.jwt.JWTUtil;
+import com.example.integration.common.config.jwt.TokenStatus;
+import com.example.integration.common.util.SecurityUtil;
+import com.example.integration.dto.user.*;
 import com.example.integration.entity.RoleType;
 import com.example.integration.entity.User;
-import com.example.integration.entity.dto.user.*;
 import com.example.integration.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
