@@ -36,4 +36,8 @@ public interface SentenceSetRepository extends JpaRepository<SentenceSet, Long> 
             "WHERE ss.id = :sentenceSetId " +
             "AND ss.user.id = :userId")
     boolean existsByUserIdAndSentenceSetId(Long userId, Long sentenceSetId);
+
+    // 사용자 문장 세트 개수 반환
+    @Query("SELECT COUNT(ss) FROM SentenceSet ss WHERE ss.user.id = :userId")
+    long countByUser(Long userId);
 }

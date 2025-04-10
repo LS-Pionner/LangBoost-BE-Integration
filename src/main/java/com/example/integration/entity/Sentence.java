@@ -1,6 +1,6 @@
 package com.example.integration.entity;
 
-import com.example.integration.config.util.BaseEntity;
+import com.example.integration.common.util.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

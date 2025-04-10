@@ -1,16 +1,19 @@
 package com.example.integration.service;
 
-import com.example.api.response.CustomException;
-import com.example.integration.config.exception.ErrorCode;
-import com.example.integration.config.util.SecurityUtil;
+import com.example.integration.common.util.SecurityUtil;
+import com.example.integration.dto.sentenceSet.ListSentenceSetResponseDto;
+import com.example.integration.dto.sentenceSet.PublicSentenceSetAndSentenceListResponseDto;
+import com.example.integration.dto.sentenceSet.PublicSentenceSetResponseDto;
+import com.example.integration.dto.sentenceSet.SentenceSetRequestDto;
 import com.example.integration.entity.RoleType;
 import com.example.integration.entity.Sentence;
 import com.example.integration.entity.SentenceSet;
 import com.example.integration.entity.User;
-import com.example.integration.entity.dto.sentenceSet.*;
 import com.example.integration.repository.SentenceRepository;
 import com.example.integration.repository.SentenceSetRepository;
 import com.example.integration.repository.UserRepository;
+import com.example.integration.response.CustomException;
+import com.example.integration.response.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

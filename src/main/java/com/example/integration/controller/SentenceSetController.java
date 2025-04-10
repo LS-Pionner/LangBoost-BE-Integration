@@ -1,7 +1,7 @@
 package com.example.integration.controller;
 
-import com.example.api.response.ApiResponse;
-import com.example.integration.entity.dto.sentenceSet.*;
+import com.example.integration.dto.sentenceSet.*;
+import com.example.integration.response.ApiResponse;
 import com.example.integration.service.SentenceSetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +38,8 @@ public class SentenceSetController {
      */
     @GetMapping("/sentence-set/{sentenceSetId}")
     public ApiResponse<SentenceSetAndSentenceListResponseDto> getSentenceSetWithSentences(@PathVariable Long sentenceSetId,
-                                                                                          @RequestParam(defaultValue = "0") int offset,
-                                                                                          @RequestParam(defaultValue = "10") int limit) {
+                                                                                                                                         @RequestParam(defaultValue = "0") int offset,
+                                                                                                                                         @RequestParam(defaultValue = "10") int limit) {
         SentenceSetAndSentenceListResponseDto sentenceSetWithSentences = sentenceSetService.getSentenceSetWithSentences(sentenceSetId, offset, limit);
 
         return ApiResponse.ok(sentenceSetWithSentences);

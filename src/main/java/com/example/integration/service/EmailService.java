@@ -1,12 +1,11 @@
 package com.example.integration.service;
 
-import com.example.api.response.CustomException;
-import com.example.api.response.DefaultErrorCode;
-import com.example.integration.config.exception.ErrorCode;
-import com.example.integration.config.util.RedisUtil;
+import com.example.integration.response.CustomException;
+import com.example.integration.response.ErrorCode;
+import com.example.integration.common.util.RedisUtil;
 import com.example.integration.entity.RoleType;
 import com.example.integration.entity.User;
-import com.example.integration.entity.dto.email.EmailDto;
+import com.example.integration.dto.email.EmailDto;
 import com.example.integration.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -14,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.util.Optional;
 import java.util.Random;
@@ -25,6 +26,8 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
     private final RedisUtil redisUtil;
     private final UserRepository userRepository;
+    private final TemplateEngine templateEngine;
+
     private static final String senderEmail = "jj@naver.com";
 
     /**
@@ -48,14 +51,13 @@ public class EmailService {
      * @param code
      * @return
      */
-    private String setContext(String code) {
-        return "<html>" +
-                "<body>" +
-                "<h1>안녕하세요!</h1>" +
-                "<p>인증 코드: <strong>" + code + "</strong></p>" +
-                "<p>이 코드를 인증 화면에 입력해 주세요.</p>" +
-                "</body>" +
-                "</html>";
+    // 이메일 내용 초기화
+    private String setVerificationEmailContext(String code) {
+        Context context = new Context();
+        context.setVariable("code", code); // 코드 값 템플릿에 전달
+
+        // Thymeleaf 템플릿 파일을 사용하여 HTML 생성
+        return templateEngine.process("verification-email", context);
     }
 
     /**
@@ -74,7 +76,7 @@ public class EmailService {
         message.addRecipients(MimeMessage.RecipientType.TO, email);
         message.setSubject("안녕하세요. 인증번호입니다.");
         message.setFrom(senderEmail);
-        message.setText(setContext(authCode), "utf-8", "html");
+        message.setText(setVerificationEmailContext(authCode), "utf-8", "html");
 
         String redisKey = purpose + ":" + email;
 
@@ -139,7 +141,7 @@ public class EmailService {
         } catch (Exception e) {
             // 사용자 저장 중 오류가 발생한 경우
             log.error("Failed to enable user with email: {}", email, e);
-            throw new CustomException(DefaultErrorCode.INTERNAL_SERVER_ERROR); // 내부 서버 오류
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR); // 내부 서버 오류
         }
 
         // 성공적으로 활성화 처리된 경우
