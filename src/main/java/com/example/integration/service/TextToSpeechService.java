@@ -124,8 +124,12 @@ public class TextToSpeechService {
     public String saveAudioToLocalFile(byte[] audioContents) throws IOException {
         // 사용자 바탕화면 경로를 얻고, tts 폴더를 설정
         String userHome = System.getProperty("user.home");
-        String desktopPath = userHome + "/Desktop"; // 바탕화면 경로
-        String ttsFolderPath = desktopPath + "/tts"; // tts 폴더 경로
+//        String desktopPath = userHome + "/Desktop"; // 바탕화면 경로
+//        String ttsFolderPath = desktopPath + "/tts"; // tts 폴더 경로
+        // 추후 특정 경로로 설정
+        String oneDrive = userHome + "\\OneDrive";
+        String desktopPath = oneDrive + "\\바탕 화면"; // 바탕화면 경로
+        String ttsFolderPath = desktopPath + "\\tts"; // tts 폴더 경로
 
         // tts 폴더가 없으면 생성
         File ttsFolder = new File(ttsFolderPath);
@@ -136,7 +140,7 @@ public class TextToSpeechService {
         // 현재 시각을 파일 이름에 포함시켜 설정
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
         String currentDateTime = LocalDateTime.now().format(formatter);
-        String outputFileName = ttsFolderPath + "/output_" + currentDateTime + ".mp3"; // 현재 시각 포함
+        String outputFileName = ttsFolderPath + "\\output_" + currentDateTime + ".mp3"; // 현재 시각 포함
 
         // MP3 파일로 저장
         try (FileOutputStream out = new FileOutputStream(outputFileName)) {
@@ -153,22 +157,26 @@ public class TextToSpeechService {
      * - 요청 언어가 ENGLISH인 경우 미국 영어 음성으로 변환됩니다.
      * - 변환된 음성은 MP3 포맷의 바이트 배열로 반환됩니다.
      *
-     * @param singleTtsRequestDto 변환할 텍스트와 언어 정보를 담은 DTO
+//     * @param singleTtsRequestDto 변환할 텍스트와 언어 정보를 담은 DTO
      * @return 생성된 음성의 바이트 배열
      * @throws CustomException TTS 생성 중 오류가 발생한 경우
      */
-    public byte[] generateSpeechAudio(SingleTtsRequestDto singleTtsRequestDto) {
+    public byte[] generateSpeechAudio(
+//            SingleTtsRequestDto singleTtsRequestDto
+            String text
+    ) {
         try {
             VoiceLanguage voiceLanguage = null;
             VoiceName voiceName = null;
 
-            if ("ENGLISH".equalsIgnoreCase(singleTtsRequestDto.language())) {
+//            if ("ENGLISH".equalsIgnoreCase(singleTtsRequestDto.language())) {
                 voiceLanguage = VoiceLanguage.ENGLISH_US;
                 voiceName = VoiceName.EN_US_NEURAL2_A;
-            }
+//            }
 
             ByteString audioContent = convertTextToSpeechFromGoogleCloud(
-                    singleTtsRequestDto.text(),
+//                    singleTtsRequestDto.text(),
+                    text,
                     voiceLanguage,
                     voiceName
             );

@@ -10,7 +10,7 @@ public record ApiResponse<T>(
 
         boolean success,
 
-        @Nullable T data,
+        @Nullable T payload,
 
         @Nullable ExceptionDto error
 ) {
