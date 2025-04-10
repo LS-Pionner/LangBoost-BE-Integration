@@ -1,7 +1,7 @@
 package com.example.integration.service;
 
-import com.example.integration.response.CustomException;
-import com.example.integration.response.ErrorCode;
+import com.example.integration.common.response.CustomException;
+import com.example.integration.common.response.ErrorCode;
 import com.example.integration.common.config.jwt.JWTUtil;
 import com.example.integration.common.config.jwt.TokenStatus;
 import com.example.integration.common.util.SecurityUtil;

@@ -4,7 +4,7 @@ import com.example.integration.dto.sentenceSet.ListSentenceSetResponseDto;
 import com.example.integration.dto.sentenceSet.PublicSentenceSetAndSentenceListResponseDto;
 import com.example.integration.dto.sentenceSet.PublicSentenceSetResponseDto;
 import com.example.integration.dto.sentenceSet.SentenceSetRequestDto;
-import com.example.integration.response.ApiResponse;
+import com.example.integration.common.response.ApiResponse;
 import com.example.integration.service.PublicSentenceSetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

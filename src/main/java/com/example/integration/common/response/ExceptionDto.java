@@ -1,4 +1,4 @@
-package com.example.integration.response;
+package com.example.integration.common.response;
 
 import jakarta.validation.constraints.NotNull;
 public record ExceptionDto (

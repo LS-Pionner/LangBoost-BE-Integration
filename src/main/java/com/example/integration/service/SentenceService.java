@@ -2,8 +2,8 @@ package com.example.integration.service;
 
 import com.example.integration.common.util.SecurityUtil;
 import com.example.integration.entity.User;
-import com.example.integration.response.CustomException;
-import com.example.integration.response.ErrorCode;
+import com.example.integration.common.response.CustomException;
+import com.example.integration.common.response.ErrorCode;
 import com.example.integration.entity.LearningStatus;
 import com.example.integration.entity.Sentence;
 import com.example.integration.entity.SentenceSet;

@@ -1,7 +1,7 @@
 package com.example.integration.controller;
 
 import com.example.integration.dto.user.*;
-import com.example.integration.response.ApiResponse;
+import com.example.integration.common.response.ApiResponse;
 import com.example.integration.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

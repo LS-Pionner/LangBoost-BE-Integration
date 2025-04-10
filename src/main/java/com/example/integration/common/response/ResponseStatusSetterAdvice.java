@@ -1,4 +1,4 @@
-package com.example.integration.response;
+package com.example.integration.common.response;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;

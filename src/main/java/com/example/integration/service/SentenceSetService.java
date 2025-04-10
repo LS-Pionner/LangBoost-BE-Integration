@@ -1,16 +1,13 @@
 package com.example.integration.service;
 
 import com.example.integration.common.config.event.SentenceSetViewedEvent;
-import com.example.integration.response.CustomException;
-import com.example.integration.response.ErrorCode;
+import com.example.integration.common.response.CustomException;
+import com.example.integration.common.response.ErrorCode;
 import com.example.integration.common.util.SecurityUtil;
 import com.example.integration.dto.sentenceSet.*;
 import com.example.integration.entity.Sentence;
 import com.example.integration.entity.SentenceSet;
 import com.example.integration.entity.User;
-import com.example.integration.dto.sentence.PagingResponseDto;
-import com.example.integration.dto.sentence.PublicSentenceResponseDto;
-import com.example.integration.dto.sentence.SentenceResponseDto;
 import com.example.integration.repository.SentenceRepository;
 import com.example.integration.repository.SentenceSetRepository;
 import com.example.integration.repository.UserRepository;
