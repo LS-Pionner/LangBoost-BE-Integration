@@ -1,8 +1,8 @@
 package com.example.integration.common.config.exception;
 
 import com.example.integration.common.config.jwt.JwtTokenExpiredException;
-import com.example.integration.response.ApiResponse;
-import com.example.integration.response.ErrorCode;
+import com.example.integration.common.response.ApiResponse;
+import com.example.integration.common.response.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

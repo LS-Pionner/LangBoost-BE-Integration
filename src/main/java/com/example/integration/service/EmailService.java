@@ -1,7 +1,7 @@
 package com.example.integration.service;
 
-import com.example.integration.response.CustomException;
-import com.example.integration.response.ErrorCode;
+import com.example.integration.common.response.CustomException;
+import com.example.integration.common.response.ErrorCode;
 import com.example.integration.common.util.RedisUtil;
 import com.example.integration.entity.RoleType;
 import com.example.integration.entity.User;

@@ -2,7 +2,7 @@ package com.example.integration.controller;
 
 import com.example.integration.dto.mypage.SentenceLearningStatusesDto;
 import com.example.integration.dto.user.PasswordChangeDto;
-import com.example.integration.response.ApiResponse;
+import com.example.integration.common.response.ApiResponse;
 import com.example.integration.service.MypageService;
 import com.example.integration.service.UserService;
 import lombok.RequiredArgsConstructor;

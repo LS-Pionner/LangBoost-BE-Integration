@@ -10,9 +10,11 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class ListSentenceSetResponseDto {
+    private int sentenceSetCount;
     private List<PublicSentenceSetResponseDto> sentenceSetList;
 
     public ListSentenceSetResponseDto(List<SentenceSet> sentenceSetList) {
+        this.sentenceSetCount = sentenceSetList.size();
         this.sentenceSetList = sentenceSetList.stream()
                 .map(PublicSentenceSetResponseDto::new) // 메서드 참조 사용
                 .collect(Collectors.toList());

@@ -1,4 +1,4 @@
-package com.example.integration.response;
+package com.example.integration.common.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

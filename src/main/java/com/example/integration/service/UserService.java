@@ -1,7 +1,7 @@
 package com.example.integration.service;
 
-import com.example.integration.response.CustomException;
-import com.example.integration.response.ErrorCode;
+import com.example.integration.common.response.CustomException;
+import com.example.integration.common.response.ErrorCode;
 import com.example.integration.common.config.jwt.JWTUtil;
 import com.example.integration.common.config.jwt.TokenStatus;
 import com.example.integration.common.util.SecurityUtil;
@@ -108,7 +108,8 @@ public class UserService implements UserDetailsService {
 
             // 응답할 토큰 DTO와 사용자 정보 DTO 생성
             TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
-            UserInfoDto userInfoDto = new UserInfoDto(user.getId(), user.getEmail(), user.getUsername(), user.getPassword(), user.isEnabled());
+            boolean isAdmin = user.getRoleType().equals(RoleType.ADMIN);
+            UserInfoDto userInfoDto = new UserInfoDto(user.getId(), user.getEmail(), user.getUsername(), user.getPassword(), user.isEnabled(), isAdmin);
 
             return new UserInfoAndTokenDto(userInfoDto, tokenDto);
         } catch (BadCredentialsException e) {

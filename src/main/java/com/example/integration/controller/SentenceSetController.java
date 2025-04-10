@@ -1,7 +1,7 @@
 package com.example.integration.controller;
 
 import com.example.integration.dto.sentenceSet.*;
-import com.example.integration.response.ApiResponse;
+import com.example.integration.common.response.ApiResponse;
 import com.example.integration.service.SentenceSetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,52 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class SentenceSetController {
 
     private final SentenceSetService sentenceSetService;
-
-    /**
-     * 공용 문장 세트 목록 조회 API
-     * @param offset
-     * @param limit
-     * @return
-     */
-    @GetMapping("/public/sentence-set")
-    public ApiResponse<ListSentenceSetResponseDto> getPublicSentenceSetList(@RequestParam(defaultValue = "0") int offset,
-                                                                            @RequestParam(defaultValue = "10") int limit) {
-        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.getPublicSentenceSetList(offset, limit);
-        log.info("offset: {}", offset);
-        return ApiResponse.ok(listSentenceSetResponseDto);
-    }
-
-    /**
-     * 키워드로 문장 세트 목록 검색 API
-     * 현재는 공용 모든 문장 세트에 대해서 검색
-     * (추후 공용 여부에 따라 쿼리 수정)
-     * @param keyword
-     * @param offset
-     * @param limit
-     * @return
-     */
-    @GetMapping("/public/sentence-set/search")
-    public ApiResponse<ListSentenceSetResponseDto> searchPublicSentenceSetList(@RequestParam(name = "keyword", defaultValue = "") String keyword,
-                                                                         @RequestParam(defaultValue = "0") int offset,
-                                                                         @RequestParam(defaultValue = "10") int limit) {
-        ListSentenceSetResponseDto listSentenceSetResponseDto = sentenceSetService.searchPublicSentenceSetList(keyword, offset, limit);
-
-        return ApiResponse.ok(listSentenceSetResponseDto);
-    }
-
-    /**
-     * 특정 공용 문장 세트와 포함된 문장 목록 조회 API
-     * @param sentenceSetId
-     * @param page
-     * @return
-     */
-    @GetMapping("/public/sentence-set/{sentenceSetId}")
-    public ApiResponse<PublicSentenceSetAndPagingResponseDto> getPublicSentenceSetWithSentences(@PathVariable Long sentenceSetId,
-                                                                                                @RequestParam(defaultValue = "0") int page) {
-        PublicSentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getPublicSentenceSetWithSentences(sentenceSetId, page);
-
-        return ApiResponse.ok(sentenceSetWithSentences);
-    }
 
     /**
      * 개인 문장 세트 목록 조회 API
@@ -78,19 +32,21 @@ public class SentenceSetController {
     /**
      * 특정 개인 문장 세트와 포함된 문장 목록 조회 API
      * @param sentenceSetId
-     * @param page
+     * @param offset
+     * @param limit
      * @return
      */
     @GetMapping("/sentence-set/{sentenceSetId}")
-    public ApiResponse<SentenceSetAndPagingResponseDto> getSentenceSetWithSentences(@PathVariable Long sentenceSetId,
-                                                                                    @RequestParam(defaultValue = "0") int page) {
-        SentenceSetAndPagingResponseDto sentenceSetWithSentences = sentenceSetService.getSentenceSetWithSentences(sentenceSetId, page);
+    public ApiResponse<SentenceSetAndSentenceListResponseDto> getSentenceSetWithSentences(@PathVariable Long sentenceSetId,
+                                                                                                                                         @RequestParam(defaultValue = "0") int offset,
+                                                                                                                                         @RequestParam(defaultValue = "10") int limit) {
+        SentenceSetAndSentenceListResponseDto sentenceSetWithSentences = sentenceSetService.getSentenceSetWithSentences(sentenceSetId, offset, limit);
 
         return ApiResponse.ok(sentenceSetWithSentences);
     }
 
     /**
-     * 새로운 문장 세트 생성 API
+     * 새로운 개인 문장 세트 생성 API
      * @param sentenceSetRequestDto
      * @return
      */
