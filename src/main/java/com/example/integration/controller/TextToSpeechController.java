@@ -4,6 +4,7 @@ import com.example.integration.dto.tts.SingleTtsRequestDto;
 import com.example.integration.response.ApiResponse;
 import com.example.integration.response.ErrorCode;
 import com.example.integration.service.TextToSpeechService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,11 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/tts")
 public class TextToSpeechController {
 
-    private TextToSpeechService textToSpeechService;
+    private final TextToSpeechService textToSpeechService;
 
 
     /**
