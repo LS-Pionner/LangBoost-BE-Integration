@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,16 +57,12 @@ public class TextToSpeechController {
      * - 요청 본문에 포함된 텍스트와 언어 정보를 기반으로 TTS 변환이 수행됩니다.
      * - 반환된 음성은 'tts_output.mp3' 파일 이름으로 브라우저에서 바로 재생 또는 다운로드할 수 있습니다.
      *
-//     * @param singleTtsRequestDto 변환할 텍스트와 언어 정보를 담은 요청 객체
+     * @param singleTtsRequestDto 변환할 텍스트와 언어 정보를 담은 요청 객체
      * @return 음성 데이터가 담긴 ResponseEntity (HTTP 200 또는 오류 시 500)
      */
-    @GetMapping("/generate")
-    public ResponseEntity<byte[]> generateSpeechToClient(
-            @RequestParam String text
-//            @RequestBody SingleTtsRequestDto singleTtsRequestDto
-            ) {
-//        byte[] audioBytes = textToSpeechService.generateSpeechAudio(singleTtsRequestDto);
-        byte[] audioBytes = textToSpeechService.generateSpeechAudio(text);
+    @PostMapping("/generate")
+    public ResponseEntity<byte[]> generateSpeechToClient(@RequestBody SingleTtsRequestDto singleTtsRequestDto) {
+        byte[] audioBytes = textToSpeechService.generateSpeechAudio(singleTtsRequestDto);
 
         if (audioBytes == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

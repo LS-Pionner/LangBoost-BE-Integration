@@ -157,26 +157,25 @@ public class TextToSpeechService {
      * - 요청 언어가 ENGLISH인 경우 미국 영어 음성으로 변환됩니다.
      * - 변환된 음성은 MP3 포맷의 바이트 배열로 반환됩니다.
      *
-//     * @param singleTtsRequestDto 변환할 텍스트와 언어 정보를 담은 DTO
+     * @param singleTtsRequestDto 변환할 텍스트와 언어 정보를 담은 DTO
      * @return 생성된 음성의 바이트 배열
      * @throws CustomException TTS 생성 중 오류가 발생한 경우
      */
-    public byte[] generateSpeechAudio(
-//            SingleTtsRequestDto singleTtsRequestDto
-            String text
-    ) {
+    public byte[] generateSpeechAudio(SingleTtsRequestDto singleTtsRequestDto) {
         try {
             VoiceLanguage voiceLanguage = null;
             VoiceName voiceName = null;
 
-//            if ("ENGLISH".equalsIgnoreCase(singleTtsRequestDto.language())) {
+            if ("ENGLISH".equalsIgnoreCase(singleTtsRequestDto.language())) {
                 voiceLanguage = VoiceLanguage.ENGLISH_US;
                 voiceName = VoiceName.EN_US_NEURAL2_A;
-//            }
+            } else {
+                voiceLanguage = VoiceLanguage.KOREAN;
+                voiceName = VoiceName.KO_KR_STANDARD_A;
+            }
 
             ByteString audioContent = convertTextToSpeechFromGoogleCloud(
-//                    singleTtsRequestDto.text(),
-                    text,
+                    singleTtsRequestDto.text(),
                     voiceLanguage,
                     voiceName
             );
