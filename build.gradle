@@ -73,6 +73,11 @@ dependencies {
 	// validator
 	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
 
+	// google drive
+	implementation 'com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0'
+	implementation 'com.google.auth:google-auth-library-oauth2-http:1.23.0'
+	implementation("com.google.api-client:google-api-client-jackson2:1.20.0")
+
 
 	// logstash가 logback을 이해할 수 있도록 인코딩하기 위함
 //    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'

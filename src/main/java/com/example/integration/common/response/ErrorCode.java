@@ -23,6 +23,7 @@ public enum ErrorCode {
     NOT_MATCHED_REFRESH_TOKEN(40104, HttpStatus.UNAUTHORIZED, "리프레시 토큰이 일치하지 않습니다"),
     INVALID_PASSWORD(40105, HttpStatus.UNAUTHORIZED, "비밀번호 에러"),
     LOGIN_ERROR(40106, HttpStatus.UNAUTHORIZED, "로그인 에러"),
+    GOOGLE_OAUTH_TOKEN_NOT_FOUND(40107, HttpStatus.UNAUTHORIZED, "구글 oauth 인증 토큰을 찾을 수 없습니다."),
 
 
     // 403 Forbidden

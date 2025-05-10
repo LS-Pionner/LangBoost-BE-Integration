@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+
+import static com.example.integration.common.response.ErrorCode.TTS_GENERATION_FAILED;
 
 @Slf4j
 @RestController
@@ -36,17 +39,30 @@ public class TextToSpeechController {
      * @param text 음성으로 변환할 입력 문장
      * @return 생성된 오디오 파일 경로 또는 에러 메시지를 포함한 응답
      */
-    @PostMapping("/test")
+//    @PostMapping("/test")
+    @PostMapping("/uploadToDrive")
     public ApiResponse<String> generateSpeechToLocalTest(@RequestParam String text) {
-        try {
-            // 출력 파일 이름 지정
-            String filePath = textToSpeechService.synthesizeSpeechToLocalFile(text);
-            log.info("audio 파일 생성");
+//        try {
+//            // 출력 파일 이름 지정
+//            String filePath = textToSpeechService.synthesizeSpeechAndUploadToDrive(text);
+//            log.info("audio 파일 생성");
+//
+//            return ApiResponse.ok("Audio file generated: " + filePath);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return ApiResponse.fail(ErrorCode.TTS_GENERATION_FAILED);
+//        }
 
-            return ApiResponse.ok("Audio file generated: " + filePath);
-        } catch (IOException e) {
+        try {
+            String uploadedFileId = textToSpeechService.synthesizeSpeechAndUploadToDrive(text);
+
+            return ApiResponse.ok(uploadedFileId + " 업로드 성공");
+        } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace();
-            return ApiResponse.fail(ErrorCode.TTS_GENERATION_FAILED);
+            return ApiResponse.fail(TTS_GENERATION_FAILED);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            return ApiResponse.fail(TTS_GENERATION_FAILED);
         }
     }
 
